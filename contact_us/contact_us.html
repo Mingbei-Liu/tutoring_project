@@ -2,115 +2,12 @@
 <html lang="en">
 
 <head>
-    <!-- Allows the webpage to display text and symbols correctly. -->
     <meta charset="UTF-8">
-
-    <!-- Helps the webpage resize properly on phones and tablets. -->
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <!-- This appears in the browser tab. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Information</title>
-
-    <style>
-        body {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 30px;
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #222222;
-            background-color: #f5f5f5;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .contact-card {
-            margin-bottom: 30px;
-            padding: 30px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .contact-card h2 {
-            margin-top: 0;
-            text-align: center;
-        }
-
-        .profile-picture {
-            display: block;
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 25px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        .contact-information {
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .contact-information p {
-            margin: 8px 0;
-        }
-
-        .tutor-bio {
-            max-width: 750px;
-            margin: 0 auto;
-        }
-
-        .tutor-bio p {
-            margin-bottom: 18px;
-        }
-
-        a {
-            color: #0056b3;
-        }
-
-        a:hover {
-            color: #003d80;
-        }
-
-        .return-link {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .return-link a {
-            display: inline-block;
-            padding: 10px 18px;
-            color: white;
-            text-decoration: none;
-            background-color: #0056b3;
-            border-radius: 6px;
-        }
-
-        .return-link a:hover {
-            background-color: #003d80;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 15px;
-            }
-
-            .contact-card {
-                padding: 20px;
-            }
-
-            .profile-picture {
-                width: 160px;
-                height: 160px;
-            }
-        }
-    </style>
+    
+    <!-- Link to shared stylesheet -->
+    <link rel="stylesheet" href="../styles.css">
 </head>
 
 <body>
@@ -134,7 +31,7 @@
                 project folder before entering the images folder.
             -->
             <img
-                src="../images/gaven_profile_pic.jpeg"
+                src="../profile_pics/gaven_profile_pic.jpeg"
                 alt="Profile picture of Gaven Jesse"
                 class="profile-picture"
             >
@@ -154,6 +51,17 @@
                     </a>
                 </p>
             </div>
+
+            <!-- Resume button -->
+            <p class="resume-link">
+                <a
+                    href="../resumes/gaven_resume.pdf"
+                    class="pdf-button"
+                    target="_blank"
+                >
+                    View Resume (PDF)
+                </a>
+            </p>
 
             <div class="tutor-bio">
                 <p>
@@ -192,7 +100,7 @@
             <h2>Tommy Liu</h2>
 
             <img
-                src="../images/tommy_profile_pic.jpeg"
+                src="../profile_pics/tommy_profile_pic.jpeg"
                 alt="Profile picture of Tommy Liu"
                 class="profile-picture"
             >
@@ -212,6 +120,18 @@
                     </a>
                 </p>
             </div>
+            
+            <!-- Resume button -->
+            <p class="resume-link">
+                <a
+                    href="../resumes/tommy_resume.pdf"
+                    class="pdf-button"
+                    target="_blank"
+                >
+                    View Resume (PDF)
+                </a>
+            </p>
+
 
             <div class="tutor-bio">
                 <p>
