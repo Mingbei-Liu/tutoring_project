@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -12,255 +11,261 @@
 
     <meta
         name="description"
-        content="Schedule a tutoring appointment with our tutors."
+        content="Choose a tutor, view their availability, and schedule a tutoring appointment."
     >
 
-    <title>
-        Schedule an Appointment
-    </title>
-
+    <title>Schedule a Tutoring Appointment</title>
 
     <link
         rel="stylesheet"
         href="schedule.css"
     >
 
+    <script
+        src="schedule.js"
+        defer
+    ></script>
 </head>
-
 
 <body>
 
+    <main class="page-container">
+
+        <a
+            href="../index.html"
+            class="back-link"
+        >
+            ← Return to Home
+        </a>
+
+        <header class="page-header">
+
+            <h1>
+                Schedule a Tutoring Appointment
+            </h1>
+
+            <p class="intro-text">
+                Choose a tutor to view their current availability and
+                reserve an appointment through Google Calendar.
+            </p>
+
+        </header>
+
+        <section class="schedule-card">
+
+            <div
+                id="pageError"
+                class="page-error"
+                role="alert"
+                hidden
+            ></div>
+
+            <section
+                id="tutorSelection"
+                aria-labelledby="chooseTutorHeading"
+            >
+
+                <h2 id="chooseTutorHeading">
+                    Choose Your Tutor
+                </h2>
+
+                <p class="section-description">
+                    Select a tutor below to view their available
+                    appointment times.
+                </p>
+
+                <div
+                    id="tutorContainer"
+                    class="tutor-container"
+                    role="group"
+                    aria-label="Available tutors"
+                >
+                    <p class="loading-message">
+                        Loading tutors...
+                    </p>
+                </div>
+
+            </section>
+
+            <section
+                id="selectedTutor"
+                class="selected-tutor"
+                aria-live="polite"
+                hidden
+            >
+
+                <div class="selected-photo-container">
+
+                    <img
+                        id="tutorImage"
+                        class="selected-tutor-image"
+                        src=""
+                        alt=""
+                    >
+
+                    <div
+                        id="tutorInitials"
+                        class="selected-tutor-initials"
+                        aria-hidden="true"
+                        hidden
+                    ></div>
+
+                </div>
+
+                <div class="selected-tutor-details">
+
+                    <p class="selected-label">
+                        Selected Tutor
+                    </p>
+
+                    <h2 id="tutorName"></h2>
+
+                    <p
+                        id="tutorSubjects"
+                        class="tutor-subjects"
+                    ></p>
+
+                    <p id="tutorBio"></p>
+
+                </div>
+
+            </section>
+
+            <section
+                id="bookingSection"
+                class="booking-section"
+                aria-labelledby="availableAppointmentsHeading"
+                hidden
+            >
 
-<main class="page-container">
+                <h2 id="availableAppointmentsHeading">
+                    Available Appointments
+                </h2>
+
+                <p class="calendar-instructions">
+                    Choose an available date and time in the calendar below.
+                    Google Calendar will then ask for the information needed
+                    to complete your reservation.
+                </p>
 
+                <div
+                    id="calendarStatus"
+                    class="calendar-status"
+                    role="status"
+                    aria-live="polite"
+                >
+                    Loading appointment availability...
+                </div>
 
-<a
-    href="../index.html"
-    class="back-link"
->
-    ← Return to Home
-</a>
+                <div class="google-calendar-container">
 
+                    <iframe
+                        id="bookingFrame"
+                        title="Google Calendar tutoring appointment scheduler"
+                        src="about:blank"
+                        loading="eager"
+                    ></iframe>
 
+                </div>
 
-<header class="page-header">
+                <div class="booking-actions">
 
-    <h1>
-        Schedule a Tutoring Appointment
-    </h1>
+                    <p>
+                        Is the interactive calendar not displaying correctly?
+                    </p>
 
+                    <a
+                        id="bookingButton"
+                        class="booking-button"
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Open Booking Page in a New Tab
+                    </a>
 
-    <p class="intro-text">
+                </div>
 
-        Choose a tutor below to view their availability
-        and schedule your appointment.
+            </section>
 
-    </p>
+            <section
+                class="appointment-information"
+                aria-label="Booking instructions"
+            >
 
-</header>
+                <article class="information-box">
 
+                    <div class="step-number">
+                        1
+                    </div>
 
+                    <h3>
+                        Choose a Tutor
+                    </h3>
 
+                    <p>
+                        Select the tutor whose availability you would
+                        like to view.
+                    </p>
 
-<section class="schedule-card">
+                </article>
 
+                <article class="information-box">
 
+                    <div class="step-number">
+                        2
+                    </div>
 
-<h2>
-    Choose Your Tutor
-</h2>
+                    <h3>
+                        Choose a Time
+                    </h3>
 
+                    <p>
+                        Google Calendar will only display appointment
+                        times that are currently available.
+                    </p>
 
+                </article>
 
-<div
-    id="tutorContainer"
-    class="tutor-container"
->
+                <article class="information-box">
 
-</div>
+                    <div class="step-number">
+                        3
+                    </div>
 
+                    <h3>
+                        Receive Confirmation
+                    </h3>
 
+                    <p>
+                        After booking, Google Calendar will email you
+                        the appointment details.
+                    </p>
 
+                </article>
 
+            </section>
 
-<section
-    class="selected-tutor"
->
+        </section>
 
+    </main>
 
-<img
-    id="tutorImage"
-    src=""
-    alt="Tutor profile picture"
->
+    <footer>
 
+        <p>
+            Tutoring appointments are subject to tutor availability.
+        </p>
 
-<div>
+    </footer>
 
+    <noscript>
 
-<h3
-    id="tutorName"
->
+        <div class="noscript-message">
+            JavaScript must be enabled to select a tutor and view
+            appointment availability.
+        </div>
 
-</h3>
-
-
-
-<p
-    id="tutorSubjects"
->
-
-</p>
-
-
-
-<p
-    id="tutorBio"
->
-
-</p>
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-<div
-    class="google-calendar-container"
->
-
-
-<h2>
-    Available Appointments
-</h2>
-
-
-<p class="calendar-instructions">
-
-Select an available time below to book your appointment.
-
-</p>
-
-
-
-<div class="booking-button-container">
-
-    <a
-        id="bookingButton"
-        class="booking-button"
-        href=""
-        target="_blank"
-        rel="noopener noreferrer"
-    >
-        Open Booking Page
-    </a>
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<div class="appointment-information">
-
-
-<article class="information-box">
-
-
-<h3>
-    Choose a Time
-</h3>
-
-
-<p>
-
-Only available appointment slots will appear.
-
-</p>
-
-
-</article>
-
-
-
-
-<article class="information-box">
-
-
-<h3>
-    Enter Your Information
-</h3>
-
-
-<p>
-
-Provide your name, email, and tutoring needs.
-
-</p>
-
-
-</article>
-
-
-
-
-
-<article class="information-box">
-
-
-<h3>
-    Confirmation
-</h3>
-
-
-<p>
-
-Google Calendar will send appointment details.
-
-</p>
-
-
-</article>
-
-
-
-</div>
-
-
-
-</section>
-
-
-</main>
-
-
-
-
-<footer>
-
-<p>
-    Tutoring appointments are subject to tutor availability.
-</p>
-
-</footer>
-
-
-
-
-<script src="schedule.js"></script>
-
+    </noscript>
 
 </body>
 

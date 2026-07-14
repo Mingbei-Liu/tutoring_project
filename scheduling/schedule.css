@@ -1,446 +1,457 @@
+/* Applies predictable sizing to every element. */
 * {
-
-box-sizing:border-box;
-
+    box-sizing: border-box;
 }
 
+[hidden] {
+    display: none !important;
+}
 
+html {
+    scroll-behavior: smooth;
+}
 
 body {
-
-margin:0;
-
-font-family:Arial, sans-serif;
-
-background:#f5f5f5;
-
-color:#222;
-
-line-height:1.6;
-
+    margin: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #222222;
+    background-color: #f5f5f5;
 }
 
+button,
+a {
+    font-family: inherit;
+}
 
-
+/* Main page layout */
 
 .page-container {
-
-width:min(1100px, calc(100% - 40px));
-
-margin:auto;
-
-padding:30px 0 50px;
-
+    width: min(1150px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 30px 0 50px;
 }
-
-
-
 
 .back-link {
-
-color:#405daf;
-
-font-weight:bold;
-
-text-decoration:none;
-
+    display: inline-block;
+    margin-bottom: 24px;
+    color: #405daf;
+    font-weight: bold;
+    text-decoration: none;
 }
 
-
-
-
-.back-link:hover {
-
-text-decoration:underline;
-
+.back-link:hover,
+.back-link:focus {
+    text-decoration: underline;
 }
-
-
-
 
 .page-header {
-
-text-align:center;
-
-margin-bottom:30px;
-
+    max-width: 800px;
+    margin: 0 auto 30px;
+    text-align: center;
 }
-
-
 
 h1 {
-
-color:#405daf;
-
-font-size:38px;
-
+    margin: 0 0 12px;
+    color: #405daf;
+    font-size: 38px;
+    line-height: 1.2;
 }
-
-
-
 
 .intro-text {
-
-font-size:18px;
-
-color:#555;
-
+    margin: 0;
+    color: #555555;
+    font-size: 18px;
 }
-
-
-
 
 .schedule-card {
-
-background:white;
-
-padding:30px;
-
-border-radius:12px;
-
-box-shadow:0 4px 14px rgba(0,0,0,.1);
-
+    width: 100%;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
-
-
 
 .schedule-card h2 {
-
-text-align:center;
-
-color:#222;
-
+    margin-top: 0;
+    text-align: center;
 }
 
+.section-description {
+    margin: -5px auto 25px;
+    color: #555555;
+    text-align: center;
+}
 
+/* Page error */
 
+.page-error {
+    margin-bottom: 25px;
+    padding: 16px;
+    color: #8a1c1c;
+    background-color: #fff0f0;
+    border: 1px solid #e7aaaa;
+    border-radius: 8px;
+}
 
+.loading-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #666666;
+}
 
-
-/*
-Tutor cards
-*/
-
+/* Tutor cards */
 
 .tutor-container {
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(220px,1fr));
-
-gap:20px;
-
-margin:30px 0;
-
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+    margin: 25px 0 35px;
 }
-
-
-
 
 .tutor-card {
-
-
-padding:20px;
-
-background:#f7f8fc;
-
-border-radius:12px;
-
-border:2px solid transparent;
-
-cursor:pointer;
-
-text-align:center;
-
-transition:.2s;
-
+    width: 100%;
+    padding: 22px;
+    color: #222222;
+    background-color: #f7f8fc;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background-color 0.2s ease;
 }
-
-
 
 .tutor-card:hover {
-
-
-transform:translateY(-4px);
-
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-
-
+    transform: translateY(-4px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-
+.tutor-card:focus-visible {
+    outline: 3px solid rgba(64, 93, 175, 0.35);
+    outline-offset: 3px;
+}
 
 .tutor-card.active {
-
-
-border-color:#405daf;
-
-background:#eef1ff;
-
-
+    background-color: #eef1ff;
+    border-color: #405daf;
 }
 
-
-
-
-.tutor-card img {
-
-
-width:120px;
-
-height:120px;
-
-border-radius:50%;
-
-object-fit:cover;
-
-margin-bottom:15px;
-
-
+.tutor-photo-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 15px;
 }
 
+.tutor-card-image,
+.tutor-card-initials {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
 
+.tutor-card-image {
+    display: block;
+    object-fit: cover;
+}
+
+.tutor-card-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background-color: #405daf;
+    font-size: 34px;
+    font-weight: bold;
+}
 
 .tutor-card h3 {
-
-
-margin:5px;
-
-color:#405daf;
-
-
+    margin: 6px 0;
+    color: #405daf;
+    font-size: 21px;
 }
 
+.tutor-card p {
+    margin: 0;
+    color: #555555;
+}
 
-
-
+/* Selected tutor */
 
 .selected-tutor {
-
-
-display:flex;
-
-align-items:center;
-
-gap:25px;
-
-padding:25px;
-
-background:#f7f8fc;
-
-border-radius:12px;
-
-margin-bottom:30px;
-
-
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 35px;
+    padding: 25px;
+    background-color: #f7f8fc;
+    border: 1px solid #e2e5ef;
+    border-radius: 12px;
 }
 
-
-
-
-.selected-tutor img {
-
-
-width:150px;
-
-height:150px;
-
-border-radius:50%;
-
-object-fit:cover;
-
-
+.selected-photo-container {
+    flex: 0 0 auto;
 }
 
-
-
-
-
-
-.google-calendar-container {
-
-
-border-radius:12px;
-
-overflow:hidden;
-
-border:1px solid #ddd;
-
-
+.selected-tutor-image,
+.selected-tutor-initials {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
 }
 
+.selected-tutor-image {
+    display: block;
+    object-fit: cover;
+}
 
+.selected-tutor-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background-color: #405daf;
+    font-size: 42px;
+    font-weight: bold;
+}
 
+.selected-tutor-details {
+    flex: 1;
+}
+
+.selected-tutor-details h2 {
+    margin: 0 0 8px;
+    color: #405daf;
+    text-align: left;
+}
+
+.selected-label {
+    margin: 0 0 2px;
+    color: #666666;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.tutor-subjects {
+    font-weight: bold;
+}
+
+/* Google Calendar booking section */
+
+.booking-section {
+    padding-top: 30px;
+    border-top: 1px solid #dddddd;
+}
 
 .calendar-instructions {
-
-
-text-align:center;
-
-color:#555;
-
+    max-width: 760px;
+    margin: 0 auto 22px;
+    color: #555555;
+    text-align: center;
 }
 
-
-
-
-iframe {
-
-
-width:100%;
-
-height:750px;
-
-border:none;
-
-
+.calendar-status {
+    margin-bottom: 15px;
+    padding: 12px 16px;
+    color: #304990;
+    background-color: #eef1ff;
+    border-radius: 8px;
+    text-align: center;
 }
 
-
-
-
-
-.appointment-information {
-
-
-display:grid;
-
-grid-template-columns:repeat(3,1fr);
-
-gap:20px;
-
-margin-top:30px;
-
-
+.calendar-status.error {
+    color: #8a1c1c;
+    background-color: #fff0f0;
+    border: 1px solid #e7aaaa;
 }
 
-
-
-
-
-.information-box {
-
-
-background:#f7f8fc;
-
-padding:20px;
-
-border-radius:10px;
-
+.google-calendar-container {
+    width: 100%;
+    min-height: 760px;
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 12px;
 }
 
-
-
-
-.information-box h3 {
-
-
-color:#405daf;
-
-
+.google-calendar-container iframe {
+    display: block;
+    width: 100%;
+    min-height: 760px;
+    border: 0;
 }
 
-
-
-
-footer {
-
-
-text-align:center;
-
-color:#666;
-
-padding:20px;
-
-
+.booking-actions {
+    margin-top: 24px;
+    text-align: center;
 }
 
-
-
-
-
-
-@media(max-width:800px){
-
-
-.page-container {
-
-width:calc(100% - 24px);
-
+.booking-actions p {
+    margin: 0 0 12px;
+    color: #555555;
 }
-
-
-.selected-tutor {
-
-flex-direction:column;
-
-text-align:center;
-
-}
-
-
-
-.appointment-information {
-
-
-grid-template-columns:1fr;
-
-
-}
-
-
-iframe {
-
-height:900px;
-
-}
-
-
-}
-
-.booking-button-container {
-
-text-align:center;
-
-margin:30px 0;
-
-}
-
-
 
 .booking-button {
-
-
-display:inline-block;
-
-padding:15px 30px;
-
-background:#405daf;
-
-color:white;
-
-border-radius:8px;
-
-font-weight:bold;
-
-text-decoration:none;
-
-font-size:18px;
-
-transition:.2s;
-
-
+    display: inline-block;
+    padding: 14px 24px;
+    color: #ffffff;
+    background-color: #405daf;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: bold;
+    text-decoration: none;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
 }
 
+.booking-button:hover,
+.booking-button:focus {
+    background-color: #304990;
+    transform: translateY(-2px);
+}
 
+.booking-button:active {
+    transform: translateY(0);
+}
 
-.booking-button:hover {
+/* Information boxes */
 
+.appointment-information {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 35px;
+}
 
-background:#304990;
+.information-box {
+    padding: 22px;
+    background-color: #f7f8fc;
+    border: 1px solid #e2e5ef;
+    border-radius: 10px;
+}
 
-transform:translateY(-2px);
+.information-box h3 {
+    margin: 10px 0 8px;
+    color: #405daf;
+}
 
+.information-box p {
+    margin: 0;
+    color: #555555;
+}
 
+.step-number {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background-color: #405daf;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+/* Footer */
+
+footer {
+    padding: 0 20px 30px;
+    color: #666666;
+    text-align: center;
+}
+
+.noscript-message {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 16px;
+    color: #8a1c1c;
+    background-color: #fff0f0;
+    border: 1px solid #e7aaaa;
+    border-radius: 8px;
+}
+
+/* Tablet layout */
+
+@media (max-width: 800px) {
+    .page-container {
+        width: calc(100% - 24px);
+        padding-top: 20px;
+    }
+
+    h1 {
+        font-size: 31px;
+    }
+
+    .intro-text {
+        font-size: 16px;
+    }
+
+    .schedule-card {
+        padding: 20px;
+    }
+
+    .selected-tutor {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .selected-tutor-details h2 {
+        text-align: center;
+    }
+
+    .appointment-information {
+        grid-template-columns: 1fr;
+    }
+
+    .google-calendar-container,
+    .google-calendar-container iframe {
+        min-height: 900px;
+    }
+}
+
+/* Phone layout */
+
+@media (max-width: 500px) {
+    .page-container {
+        width: calc(100% - 16px);
+    }
+
+    .schedule-card {
+        padding: 14px;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+
+    .tutor-container {
+        grid-template-columns: 1fr;
+    }
+
+    .selected-tutor {
+        padding: 18px;
+    }
+
+    .selected-tutor-image,
+    .selected-tutor-initials {
+        width: 125px;
+        height: 125px;
+    }
+
+    .google-calendar-container,
+    .google-calendar-container iframe {
+        min-height: 950px;
+    }
+
+    .booking-button {
+        width: 100%;
+    }
 }
