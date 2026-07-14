@@ -1,0 +1,446 @@
+* {
+
+box-sizing:border-box;
+
+}
+
+
+
+body {
+
+margin:0;
+
+font-family:Arial, sans-serif;
+
+background:#f5f5f5;
+
+color:#222;
+
+line-height:1.6;
+
+}
+
+
+
+
+.page-container {
+
+width:min(1100px, calc(100% - 40px));
+
+margin:auto;
+
+padding:30px 0 50px;
+
+}
+
+
+
+
+.back-link {
+
+color:#405daf;
+
+font-weight:bold;
+
+text-decoration:none;
+
+}
+
+
+
+
+.back-link:hover {
+
+text-decoration:underline;
+
+}
+
+
+
+
+.page-header {
+
+text-align:center;
+
+margin-bottom:30px;
+
+}
+
+
+
+h1 {
+
+color:#405daf;
+
+font-size:38px;
+
+}
+
+
+
+
+.intro-text {
+
+font-size:18px;
+
+color:#555;
+
+}
+
+
+
+
+.schedule-card {
+
+background:white;
+
+padding:30px;
+
+border-radius:12px;
+
+box-shadow:0 4px 14px rgba(0,0,0,.1);
+
+}
+
+
+
+.schedule-card h2 {
+
+text-align:center;
+
+color:#222;
+
+}
+
+
+
+
+
+
+/*
+Tutor cards
+*/
+
+
+.tutor-container {
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+
+gap:20px;
+
+margin:30px 0;
+
+}
+
+
+
+
+.tutor-card {
+
+
+padding:20px;
+
+background:#f7f8fc;
+
+border-radius:12px;
+
+border:2px solid transparent;
+
+cursor:pointer;
+
+text-align:center;
+
+transition:.2s;
+
+}
+
+
+
+.tutor-card:hover {
+
+
+transform:translateY(-4px);
+
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+
+}
+
+
+
+.tutor-card.active {
+
+
+border-color:#405daf;
+
+background:#eef1ff;
+
+
+}
+
+
+
+
+.tutor-card img {
+
+
+width:120px;
+
+height:120px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+margin-bottom:15px;
+
+
+}
+
+
+
+.tutor-card h3 {
+
+
+margin:5px;
+
+color:#405daf;
+
+
+}
+
+
+
+
+
+.selected-tutor {
+
+
+display:flex;
+
+align-items:center;
+
+gap:25px;
+
+padding:25px;
+
+background:#f7f8fc;
+
+border-radius:12px;
+
+margin-bottom:30px;
+
+
+}
+
+
+
+
+.selected-tutor img {
+
+
+width:150px;
+
+height:150px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+
+}
+
+
+
+
+
+
+.google-calendar-container {
+
+
+border-radius:12px;
+
+overflow:hidden;
+
+border:1px solid #ddd;
+
+
+}
+
+
+
+
+.calendar-instructions {
+
+
+text-align:center;
+
+color:#555;
+
+}
+
+
+
+
+iframe {
+
+
+width:100%;
+
+height:750px;
+
+border:none;
+
+
+}
+
+
+
+
+
+.appointment-information {
+
+
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:20px;
+
+margin-top:30px;
+
+
+}
+
+
+
+
+
+.information-box {
+
+
+background:#f7f8fc;
+
+padding:20px;
+
+border-radius:10px;
+
+}
+
+
+
+
+.information-box h3 {
+
+
+color:#405daf;
+
+
+}
+
+
+
+
+footer {
+
+
+text-align:center;
+
+color:#666;
+
+padding:20px;
+
+
+}
+
+
+
+
+
+
+@media(max-width:800px){
+
+
+.page-container {
+
+width:calc(100% - 24px);
+
+}
+
+
+.selected-tutor {
+
+flex-direction:column;
+
+text-align:center;
+
+}
+
+
+
+.appointment-information {
+
+
+grid-template-columns:1fr;
+
+
+}
+
+
+iframe {
+
+height:900px;
+
+}
+
+
+}
+
+.booking-button-container {
+
+text-align:center;
+
+margin:30px 0;
+
+}
+
+
+
+.booking-button {
+
+
+display:inline-block;
+
+padding:15px 30px;
+
+background:#405daf;
+
+color:white;
+
+border-radius:8px;
+
+font-weight:bold;
+
+text-decoration:none;
+
+font-size:18px;
+
+transition:.2s;
+
+
+}
+
+
+
+.booking-button:hover {
+
+
+background:#304990;
+
+transform:translateY(-2px);
+
+
+}

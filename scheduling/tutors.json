@@ -1,0 +1,43 @@
+{
+    "tutors": [
+        {
+            "id": "gaven",
+            "name": "Gaven",
+            "photo": "../profile_pics/gaven_profile_pic.jpeg",
+            "subjects": [
+                "Calculus",
+                "Physics",
+                "Chemistry"
+            ],
+            "bio": "Gaven specializes in mathematics, science, and helping students develop strong problem-solving skills.",
+            "email": "gaven@yourcompany.com",
+            "bookingLink": "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2onfBuOplXwmHRVyvlD7-Twgi_dfwOH7nvoYLglwMHNPRGknWLmokAJckgitRWe-m-lwvWt1hr"
+        },
+
+        {
+            "id": "tommy",
+            "name": "Tommy",
+            "photo": "../profile_pics/tommy_profile_pic.jpeg",
+            "subjects": [
+                "Programming",
+                "Discrete Math"
+            ],
+            "bio": "Tommy helps students understand programming concepts and build computational thinking skills.",
+            "email": "tommy@yourcompany.com",
+            "bookingLink": "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3kbCHRlLoiw008OMFXiuiIpoemDMvd0IDFpcL5uM8RQ6q6DFnpyYOigXdrrhXFhgTlZJHBmBa8"
+        },
+
+        {
+            "id": "tori",
+            "name": "Tori",
+            "photo": "../profile_pics/gaven_profile_pic.jpeg",
+            "subjects": [
+                "Biology",
+                "Statistics"
+            ],
+            "bio": "Tori specializes in biology and statistics tutoring.",
+            "email": "tori@yourcompany.com",
+            "bookingLink": "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2SGpqRN3pG5JrTmwIpWZxvDdJxL7Zf9yitweihrB16F-l0Kd6IQ3XmXW7mXel2hLO1NIdpJ8Y2"
+        }
+    ]
+}

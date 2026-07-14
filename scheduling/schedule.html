@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -11,392 +12,255 @@
 
     <meta
         name="description"
-        content="View tutor availability and schedule a tutoring appointment."
+        content="Schedule a tutoring appointment with our tutors."
     >
 
-    <title>Schedule an Appointment</title>
+    <title>
+        Schedule an Appointment
+    </title>
 
-    <style>
-        /* Makes element sizing more predictable. */
-        * {
-            box-sizing: border-box;
-        }
 
-        html {
-            scroll-behavior: smooth;
-        }
+    <link
+        rel="stylesheet"
+        href="schedule.css"
+    >
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #222222;
-            background-color: #f5f5f5;
-        }
-
-        /*
-            The page is wider than the original form because the
-            Google Calendar interface needs additional horizontal space.
-        */
-        .page-container {
-            width: min(1100px, calc(100% - 40px));
-            margin: 0 auto;
-            padding: 30px 0 50px;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 24px;
-            color: #405daf;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .back-link:hover,
-        .back-link:focus {
-            text-decoration: underline;
-        }
-
-        .page-header {
-            max-width: 800px;
-            margin: 0 auto 30px;
-            text-align: center;
-        }
-
-        h1 {
-            margin: 0 0 12px;
-            color: #405daf;
-            font-size: 38px;
-            line-height: 1.2;
-        }
-
-        .intro-text {
-            margin: 0;
-            color: #555555;
-            font-size: 18px;
-        }
-
-        .schedule-card {
-            width: 100%;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-        }
-
-        .schedule-card h2 {
-            margin: 0 0 8px;
-            text-align: center;
-            color: #222222;
-            font-size: 26px;
-        }
-
-        .calendar-instructions {
-            max-width: 750px;
-            margin: 0 auto 26px;
-            text-align: center;
-            color: #555555;
-        }
-
-        /*
-            Paste Google's inline appointment-schedule embed code
-            inside this container.
-        */
-        .google-calendar-container {
-            width: 100%;
-            min-height: 750px;
-            overflow: hidden;
-            border: 1px solid #dddddd;
-            border-radius: 10px;
-            background-color: #ffffff;
-        }
-
-        /*
-            This makes Google's iframe responsive when the generated
-            embed code contains an iframe.
-        */
-        .google-calendar-container iframe {
-            display: block;
-            width: 100% !important;
-            min-height: 750px;
-            border: none;
-        }
-
-        /*
-            This placeholder can be deleted after Google's actual
-            appointment-schedule code is added.
-        */
-        .embed-placeholder {
-            display: flex;
-            min-height: 750px;
-            padding: 30px;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #666666;
-            background-color: #fafafa;
-        }
-
-        .embed-placeholder-content {
-            max-width: 600px;
-        }
-
-        .embed-placeholder h3 {
-            margin-top: 0;
-            color: #405daf;
-        }
-
-        .embed-placeholder code {
-            padding: 3px 6px;
-            color: #222222;
-            background-color: #eeeeee;
-            border-radius: 4px;
-        }
-
-        .fallback-section {
-            margin-top: 24px;
-            padding-top: 24px;
-            text-align: center;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .fallback-section p {
-            margin: 0 0 14px;
-            color: #555555;
-        }
-
-        .booking-link {
-            display: inline-block;
-            padding: 14px 24px;
-            color: #ffffff;
-            background-color: #405daf;
-            border-radius: 8px;
-            font-size: 17px;
-            font-weight: bold;
-            text-decoration: none;
-            transition:
-                background-color 0.2s ease,
-                transform 0.2s ease;
-        }
-
-        .booking-link:hover,
-        .booking-link:focus {
-            background-color: #304990;
-            transform: translateY(-2px);
-        }
-
-        .booking-link:active {
-            transform: translateY(0);
-        }
-
-        .appointment-information {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .information-box {
-            padding: 20px;
-            background-color: #f7f8fc;
-            border: 1px solid #e0e4f0;
-            border-radius: 10px;
-        }
-
-        .information-box h3 {
-            margin: 0 0 8px;
-            color: #405daf;
-            font-size: 18px;
-        }
-
-        .information-box p {
-            margin: 0;
-            color: #555555;
-        }
-
-        footer {
-            margin-top: 35px;
-            text-align: center;
-            color: #666666;
-            font-size: 14px;
-        }
-
-        @media (max-width: 800px) {
-            .page-container {
-                width: min(100% - 24px, 1100px);
-                padding-top: 20px;
-            }
-
-            h1 {
-                font-size: 31px;
-            }
-
-            .intro-text {
-                font-size: 16px;
-            }
-
-            .schedule-card {
-                padding: 18px;
-            }
-
-            .google-calendar-container,
-            .google-calendar-container iframe,
-            .embed-placeholder {
-                min-height: 850px;
-            }
-
-            .appointment-information {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .page-container {
-                width: min(100% - 16px, 1100px);
-            }
-
-            .schedule-card {
-                padding: 12px;
-            }
-
-            h1 {
-                font-size: 27px;
-            }
-
-            .google-calendar-container,
-            .google-calendar-container iframe,
-            .embed-placeholder {
-                min-height: 900px;
-            }
-
-            .booking-link {
-                width: 100%;
-            }
-        }
-    </style>
 </head>
+
 
 <body>
 
-    <main class="page-container">
 
-        <a href="../index.html" class="back-link">
-            ← Return to Home
-        </a>
+<main class="page-container">
 
-        <header class="page-header">
-            <h1>Schedule a Tutoring Appointment</h1>
 
-            <p class="intro-text">
-                View our current availability and reserve a tutoring
-                appointment directly through Google Calendar.
-            </p>
-        </header>
+<a
+    href="../index.html"
+    class="back-link"
+>
+    ← Return to Home
+</a>
 
-        <section class="schedule-card">
 
-            <h2>Available Appointments</h2>
 
-            <p class="calendar-instructions">
-                Select a tutor or service, choose an available date and
-                time, and complete the booking form. Google Calendar will
-                send a confirmation after your appointment is scheduled.
-            </p>
+<header class="page-header">
 
-            <div
-                class="google-calendar-container"
-                aria-label="Google Calendar tutoring appointment scheduler"
-            >
+    <h1>
+        Schedule a Tutoring Appointment
+    </h1>
 
-                <!--
-                    GOOGLE CALENDAR EMBED INSTRUCTIONS
 
-                    1. Create an appointment schedule in Google Calendar.
-                    2. Open the appointment schedule's sharing options.
-                    3. Select the website embed option.
-                    4. Select the inline booking-page format.
-                    5. Copy the complete code Google provides.
-                    6. Delete the embed-placeholder div below.
-                    7. Paste Google's complete code here.
+    <p class="intro-text">
 
-                    Do not create the Google iframe URL manually.
-                -->
+        Choose a tutor below to view their availability
+        and schedule your appointment.
 
-                <div class="embed-placeholder">
-                    <div class="embed-placeholder-content">
-                        <h3>Google Calendar Embed Goes Here</h3>
+    </p>
 
-                        <p>
-                            After creating your Google Calendar appointment
-                            schedule, delete this placeholder and paste
-                            Google's complete inline booking-page embed code
-                            inside
-                            <code>.google-calendar-container</code>.
-                        </p>
-                    </div>
-                </div>
+</header>
 
-            </div>
 
-            <div class="fallback-section">
-                <p>
-                    Is the scheduling calendar not displaying correctly?
-                </p>
 
-                <!--
-                    Replace YOUR_GOOGLE_BOOKING_PAGE_URL with the public
-                    booking-page URL supplied by Google Calendar.
-                -->
-                <a
-                    href="YOUR_GOOGLE_BOOKING_PAGE_URL"
-                    class="booking-link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Open Scheduling in Google Calendar
-                </a>
-            </div>
 
-            <div class="appointment-information">
+<section class="schedule-card">
 
-                <article class="information-box">
-                    <h3>Choose a Time</h3>
 
-                    <p>
-                        Only appointment times that are currently available
-                        will appear in the calendar.
-                    </p>
-                </article>
 
-                <article class="information-box">
-                    <h3>Enter Your Information</h3>
+<h2>
+    Choose Your Tutor
+</h2>
 
-                    <p>
-                        Provide your name, email address, course, and the
-                        topics you would like to review.
-                    </p>
-                </article>
 
-                <article class="information-box">
-                    <h3>Receive Confirmation</h3>
 
-                    <p>
-                        Google Calendar will email you the appointment
-                        details after your booking is completed.
-                    </p>
-                </article>
+<div
+    id="tutorContainer"
+    class="tutor-container"
+>
 
-            </div>
+</div>
 
-        </section>
 
-    </main>
 
-    <footer>
-        <p>
-            Tutoring appointments are subject to tutor availability.
-        </p>
-    </footer>
+
+
+<section
+    class="selected-tutor"
+>
+
+
+<img
+    id="tutorImage"
+    src=""
+    alt="Tutor profile picture"
+>
+
+
+<div>
+
+
+<h3
+    id="tutorName"
+>
+
+</h3>
+
+
+
+<p
+    id="tutorSubjects"
+>
+
+</p>
+
+
+
+<p
+    id="tutorBio"
+>
+
+</p>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<div
+    class="google-calendar-container"
+>
+
+
+<h2>
+    Available Appointments
+</h2>
+
+
+<p class="calendar-instructions">
+
+Select an available time below to book your appointment.
+
+</p>
+
+
+
+<div class="booking-button-container">
+
+    <a
+        id="bookingButton"
+        class="booking-button"
+        href=""
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        Open Booking Page
+    </a>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div class="appointment-information">
+
+
+<article class="information-box">
+
+
+<h3>
+    Choose a Time
+</h3>
+
+
+<p>
+
+Only available appointment slots will appear.
+
+</p>
+
+
+</article>
+
+
+
+
+<article class="information-box">
+
+
+<h3>
+    Enter Your Information
+</h3>
+
+
+<p>
+
+Provide your name, email, and tutoring needs.
+
+</p>
+
+
+</article>
+
+
+
+
+
+<article class="information-box">
+
+
+<h3>
+    Confirmation
+</h3>
+
+
+<p>
+
+Google Calendar will send appointment details.
+
+</p>
+
+
+</article>
+
+
+
+</div>
+
+
+
+</section>
+
+
+</main>
+
+
+
+
+<footer>
+
+<p>
+    Tutoring appointments are subject to tutor availability.
+</p>
+
+</footer>
+
+
+
+
+<script src="schedule.js"></script>
+
 
 </body>
 
