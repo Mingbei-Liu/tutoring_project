@@ -1,10 +1,8 @@
 "use strict";
 
 /*
-    Tutor information is stored directly in this file so the website
-    can run locally by double-clicking schedule.html.
-
-    No local server is required.
+    Tutor information is stored directly in this file so the
+    scheduling page can be opened locally without a server.
 */
 
 const tutors = [
@@ -20,10 +18,8 @@ const tutors = [
         bio:
             "Gaven specializes in mathematics, science, and helping " +
             "students develop strong problem-solving skills.",
-        email: "gaven@yourcompany.com",
         bookingLink:
-            "https://calendar.google.com/calendar/u/0/appointments/" +
-            "schedules/AcZssZ2onfBuOplXwmHRVyvlD7-Twgi_dfwOH7nvoYLglwMHNPRGknWLmokAJckgitRWe-m-lwvWt1hr"
+            "https://calendly.com/mingbei-liu/tutoring-with-gaven"
     },
 
     {
@@ -37,31 +33,32 @@ const tutors = [
         bio:
             "Tommy helps students understand programming concepts " +
             "and build computational thinking skills.",
-        email: "tommy@yourcompany.com",
         bookingLink:
-            "https://calendar.google.com/calendar/u/0/appointments/" +
-            "schedules/AcZssZ3kbCHRlLoiw008OMFXiuiIpoemDMvd0IDFpcL5uM8RQ6q6DFnpyYOigXdrrhXFhgTlZJHBmBa8"
+            "https://calendly.com/mingbei-liu/tutoring-with-tommy"
     },
 
     {
         id: "tori",
         name: "Tori",
-        photo: "../profile_pics/tori_profile_pic.jpeg",
+
+        /*
+            Add Tori's image path here when her picture is available.
+
+            Example:
+            photo: "../profile_pics/tori_profile_pic.jpeg"
+        */
+        photo: "",
+
         subjects: [
             "Biology",
             "Statistics"
         ],
         bio:
             "Tori specializes in biology and statistics tutoring.",
-        email: "tori@yourcompany.com",
         bookingLink:
-            "https://calendar.google.com/calendar/u/0/appointments/" +
-            "schedules/AcZssZ2SGpqRN3pG5JrTmwIpWZxvDdJxL7Zf9yitweihrB16F-l0Kd6IQ3XmXW7mXel2hLO1NIdpJ8Y2"
+            "https://calendly.com/mingbei-liu/tutoring-with-tori"
     }
 ];
-
-
-let calendarLoadTimer = null;
 
 
 const tutorContainer =
@@ -88,8 +85,8 @@ const tutorSubjects =
 const tutorBio =
     document.getElementById("tutorBio");
 
-const bookingFrame =
-    document.getElementById("bookingFrame");
+const calendlyEmbed =
+    document.getElementById("calendlyEmbed");
 
 const bookingButton =
     document.getElementById("bookingButton");
@@ -108,7 +105,7 @@ document.addEventListener(
 
 
 /*
-    Initializes the tutor-selection interface.
+    Creates the tutor cards and selects the first tutor.
 */
 function initializePage() {
     try {
@@ -123,7 +120,7 @@ function initializePage() {
 
         if (validTutors.length === 0) {
             throw new Error(
-                "No valid tutor information was found."
+                "No valid tutor records were found."
             );
         }
 
@@ -142,7 +139,7 @@ function initializePage() {
 
 
 /*
-    Confirms that a tutor contains all required fields.
+    Checks that each tutor has all required information.
 */
 function isValidTutor(tutor) {
     return (
@@ -157,7 +154,7 @@ function isValidTutor(tutor) {
 
 
 /*
-    Creates a selectable card for every tutor.
+    Creates one selectable card for each tutor.
 */
 function createTutorCards(tutorList) {
     tutorContainer.innerHTML = "";
@@ -253,7 +250,7 @@ function createTutorCards(tutorList) {
 
 
 /*
-    Selects a tutor and loads that tutor's information.
+    Selects a tutor and loads their Calendly page.
 */
 function selectTutor(tutorId) {
     const tutor =
@@ -275,7 +272,7 @@ function selectTutor(tutorId) {
 
     updateSelectedTutorInformation(tutor);
 
-    loadBookingCalendar(tutor);
+    loadCalendlyWidget(tutor);
 
     selectedTutor.hidden = false;
 
@@ -284,7 +281,7 @@ function selectTutor(tutorId) {
 
 
 /*
-    Highlights the currently selected tutor card.
+    Highlights the selected tutor card.
 */
 function updateActiveTutorCard(tutorId) {
     const cards =
@@ -310,7 +307,7 @@ function updateActiveTutorCard(tutorId) {
 
 
 /*
-    Updates the larger tutor-information section.
+    Updates the selected-tutor information panel.
 */
 function updateSelectedTutorInformation(tutor) {
     tutorName.textContent =
@@ -335,34 +332,24 @@ function updateSelectedTutorInformation(tutor) {
 
 
 /*
-    Loads the selected tutor's Google Calendar appointment
-    schedule inside the iframe.
+    Loads the selected tutor's Calendly event inside the page.
 */
-function loadBookingCalendar(tutor) {
+function loadCalendlyWidget(tutor) {
     try {
-        const publicBookingUrl =
-            createGoogleBookingUrl(
-                tutor.bookingLink,
-                false
-            );
-
-        const embeddedBookingUrl =
-            createGoogleBookingUrl(
-                tutor.bookingLink,
-                true
-            );
-
+        validateCalendlyLink(
+            tutor.bookingLink
+        );
 
         bookingButton.href =
-            publicBookingUrl;
+            tutor.bookingLink;
 
         bookingButton.textContent =
-            `Open ${tutor.name}'s Booking Page in a New Tab`;
+            `Open ${tutor.name}'s Calendly Page`;
 
-
-        bookingFrame.title =
-            `Book a tutoring appointment with ${tutor.name}`;
-
+        calendlyEmbed.setAttribute(
+            "aria-label",
+            `Schedule a tutoring appointment with ${tutor.name}`
+        );
 
         calendarStatus.hidden = false;
 
@@ -373,42 +360,75 @@ function loadBookingCalendar(tutor) {
         calendarStatus.textContent =
             `Loading ${tutor.name}'s available appointments...`;
 
+        /*
+            Remove the previous tutor's Calendly iframe before
+            creating the newly selected tutor's scheduler.
+        */
+        calendlyEmbed.innerHTML = "";
 
-        if (calendarLoadTimer) {
-            window.clearTimeout(
-                calendarLoadTimer
+
+        if (
+            !window.Calendly ||
+            typeof window.Calendly.initInlineWidget !== "function"
+        ) {
+            throw new Error(
+                "The Calendly embed script could not be loaded."
             );
         }
 
 
-        bookingFrame.onload =
+        window.Calendly.initInlineWidget({
+            url: tutor.bookingLink,
+            parentElement: calendlyEmbed
+        });
+
+
+        /*
+            Calendly creates an iframe inside the container.
+            Add an accessible title and hide the loading message
+            after the iframe finishes loading.
+        */
+        window.setTimeout(
             function () {
-                calendarStatus.hidden = true;
-            };
+                const calendlyFrame =
+                    calendlyEmbed.querySelector(
+                        "iframe"
+                    );
 
+                if (calendlyFrame) {
+                    calendlyFrame.title =
+                        `Book a tutoring appointment with ${tutor.name}`;
 
-        bookingFrame.src =
-            embeddedBookingUrl;
+                    calendlyFrame.addEventListener(
+                        "load",
+                        function () {
+                            calendarStatus.hidden = true;
+                        },
+                        {
+                            once: true
+                        }
+                    );
 
-
-        calendarLoadTimer =
-            window.setTimeout(
-                function () {
-                    if (!calendarStatus.hidden) {
-                        calendarStatus.classList.add(
-                            "error"
-                        );
-
-                        calendarStatus.textContent =
-                            "The calendar is taking longer than expected " +
-                            "to load. Use the button below to open the " +
-                            "booking page in a new tab.";
-                    }
-                },
-                12000
-            );
+                    /*
+                        Hide the status even if the iframe loaded
+                        before the event listener was attached.
+                    */
+                    window.setTimeout(
+                        function () {
+                            calendarStatus.hidden = true;
+                        },
+                        1000
+                    );
+                } else {
+                    calendarStatus.hidden = true;
+                }
+            },
+            100
+        );
     } catch (error) {
         console.error(error);
+
+        calendlyEmbed.innerHTML = "";
 
         calendarStatus.hidden = false;
 
@@ -417,77 +437,32 @@ function loadBookingCalendar(tutor) {
         );
 
         calendarStatus.textContent =
-            "This tutor's Google Calendar booking link is invalid. " +
-            "Check the bookingLink value inside schedule.js.";
-
-        bookingFrame.src =
-            "about:blank";
-
-        bookingButton.removeAttribute(
-            "href"
-        );
+            "The embedded scheduler could not be loaded. " +
+            "Use the button below to open the tutor's Calendly page.";
     }
 }
 
 
 /*
-    Converts the Google appointment-schedule link into
-    a public link or an iframe-compatible link.
+    Confirms that the booking URL is a Calendly link.
 */
-function createGoogleBookingUrl(
-    bookingLink,
-    embedded
-) {
+function validateCalendlyLink(bookingLink) {
     const url =
         new URL(bookingLink);
 
     if (
-        url.hostname !==
-        "calendar.google.com"
+        url.protocol !== "https:" ||
+        url.hostname !== "calendly.com"
     ) {
         throw new Error(
-            "The booking link must use calendar.google.com."
+            "The tutor booking link must use calendly.com."
         );
     }
-
-    if (
-        !url.pathname.includes(
-            "/appointments/schedules/"
-        )
-    ) {
-        throw new Error(
-            "The URL is not a Google Calendar appointment schedule."
-        );
-    }
-
-    /*
-        Removes the signed-in account portion, such as /u/0/,
-        from the URL.
-    */
-    url.pathname =
-        url.pathname.replace(
-            /^\/calendar\/u\/\d+\//,
-            "/calendar/"
-        );
-
-    if (embedded) {
-        url.searchParams.set(
-            "gv",
-            "true"
-        );
-    } else {
-        url.searchParams.delete(
-            "gv"
-        );
-    }
-
-    return url.toString();
 }
 
 
 /*
-    Shows the tutor's initials if their profile image cannot
-    be found or loaded.
+    Displays the tutor's initials when their image is unavailable.
 */
 function configurePhoto(
     imageElement,
@@ -522,7 +497,7 @@ function configurePhoto(
 
 
 /*
-    Creates initials such as "GJ" from a person's name.
+    Creates initials from a tutor's name.
 */
 function getInitials(name) {
     return name

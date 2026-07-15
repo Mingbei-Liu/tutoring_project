@@ -46,7 +46,7 @@ a {
 }
 
 .page-header {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto 30px;
     text-align: center;
 }
@@ -83,7 +83,7 @@ h1 {
     text-align: center;
 }
 
-/* Page error */
+/* Error messages */
 
 .page-error {
     margin-bottom: 25px;
@@ -92,12 +92,6 @@ h1 {
     background-color: #fff0f0;
     border: 1px solid #e7aaaa;
     border-radius: 8px;
-}
-
-.loading-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: #666666;
 }
 
 /* Tutor cards */
@@ -243,7 +237,7 @@ h1 {
     font-weight: bold;
 }
 
-/* Google Calendar booking section */
+/* Calendly booking section */
 
 .booking-section {
     padding-top: 30px;
@@ -272,53 +266,94 @@ h1 {
     border: 1px solid #e7aaaa;
 }
 
-.google-calendar-container {
+.calendly-container {
     width: 100%;
-    min-height: 760px;
+    min-height: 780px;
     overflow: hidden;
     background-color: #ffffff;
     border: 1px solid #dddddd;
     border-radius: 12px;
 }
 
-.google-calendar-container iframe {
-    display: block;
+.calendly-embed {
     width: 100%;
-    min-height: 760px;
+    min-width: 320px;
+    height: 780px;
+}
+
+.calendly-embed iframe {
+    display: block;
+    width: 100% !important;
+    min-width: 320px;
+    height: 100% !important;
     border: 0;
 }
 
+/* Booking and contact buttons */
+
 .booking-actions {
-    margin-top: 24px;
+    margin-top: 25px;
+    padding-top: 25px;
     text-align: center;
+    border-top: 1px solid #e2e2e2;
 }
 
 .booking-actions p {
-    margin: 0 0 12px;
+    margin: 0 0 14px;
     color: #555555;
 }
 
-.booking-button {
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.booking-button,
+.contact-button {
     display: inline-block;
+    min-width: 220px;
     padding: 14px 24px;
-    color: #ffffff;
-    background-color: #405daf;
     border-radius: 8px;
     font-size: 17px;
     font-weight: bold;
+    text-align: center;
     text-decoration: none;
     transition:
         background-color 0.2s ease,
+        color 0.2s ease,
         transform 0.2s ease;
+}
+
+.booking-button {
+    color: #ffffff;
+    background-color: #405daf;
+    border: 2px solid #405daf;
 }
 
 .booking-button:hover,
 .booking-button:focus {
     background-color: #304990;
+    border-color: #304990;
     transform: translateY(-2px);
 }
 
-.booking-button:active {
+.contact-button {
+    color: #405daf;
+    background-color: #ffffff;
+    border: 2px solid #405daf;
+}
+
+.contact-button:hover,
+.contact-button:focus {
+    color: #ffffff;
+    background-color: #405daf;
+    transform: translateY(-2px);
+}
+
+.booking-button:active,
+.contact-button:active {
     transform: translateY(0);
 }
 
@@ -341,6 +376,7 @@ h1 {
 .information-box h3 {
     margin: 10px 0 8px;
     color: #405daf;
+    font-size: 19px;
 }
 
 .information-box p {
@@ -368,14 +404,23 @@ footer {
     text-align: center;
 }
 
+footer p {
+    margin: 5px 0;
+}
+
+footer a {
+    color: #405daf;
+}
+
 .noscript-message {
     max-width: 700px;
     margin: 20px auto;
-    padding: 16px;
+    padding: 18px;
     color: #8a1c1c;
     background-color: #fff0f0;
     border: 1px solid #e7aaaa;
     border-radius: 8px;
+    text-align: center;
 }
 
 /* Tablet layout */
@@ -411,9 +456,10 @@ footer {
         grid-template-columns: 1fr;
     }
 
-    .google-calendar-container,
-    .google-calendar-container iframe {
+    .calendly-container,
+    .calendly-embed {
         min-height: 900px;
+        height: 900px;
     }
 }
 
@@ -446,12 +492,24 @@ footer {
         height: 125px;
     }
 
-    .google-calendar-container,
-    .google-calendar-container iframe {
-        min-height: 950px;
+    .calendly-container {
+        border-right: none;
+        border-left: none;
+        border-radius: 0;
     }
 
-    .booking-button {
+    .calendly-container,
+    .calendly-embed {
+        min-height: 1050px;
+        height: 1050px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .booking-button,
+    .contact-button {
         width: 100%;
     }
 }

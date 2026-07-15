@@ -11,16 +11,31 @@
 
     <meta
         name="description"
-        content="Choose a tutor, view their availability, and schedule a tutoring appointment."
+        content="Choose a tutor, view their availability, and schedule a tutoring appointment through Calendly."
     >
 
     <title>Schedule a Tutoring Appointment</title>
 
+    <!-- Your scheduling-page stylesheet -->
     <link
         rel="stylesheet"
         href="schedule.css"
     >
 
+    <!-- Calendly's official embed stylesheet -->
+    <link
+        rel="stylesheet"
+        href="https://assets.calendly.com/assets/external/widget.css"
+    >
+
+    <!-- Calendly's official embed script -->
+    <script
+        src="https://assets.calendly.com/assets/external/widget.js"
+        type="text/javascript"
+        defer
+    ></script>
+
+    <!-- Your scheduling-page JavaScript -->
     <script
         src="schedule.js"
         defer
@@ -45,8 +60,8 @@
             </h1>
 
             <p class="intro-text">
-                Choose a tutor to view their current availability and
-                reserve an appointment through Google Calendar.
+                Choose a tutor to learn more about them, view their
+                availability, and reserve an appointment through Calendly.
             </p>
 
         </header>
@@ -61,7 +76,7 @@
             ></div>
 
             <section
-                id="tutorSelection"
+                class="tutor-selection"
                 aria-labelledby="chooseTutorHeading"
             >
 
@@ -79,11 +94,7 @@
                     class="tutor-container"
                     role="group"
                     aria-label="Available tutors"
-                >
-                    <p class="loading-message">
-                        Loading tutors...
-                    </p>
-                </div>
+                ></div>
 
             </section>
 
@@ -99,8 +110,8 @@
                     <img
                         id="tutorImage"
                         class="selected-tutor-image"
-                        src=""
                         alt=""
+                        hidden
                     >
 
                     <div
@@ -143,9 +154,9 @@
                 </h2>
 
                 <p class="calendar-instructions">
-                    Choose an available date and time in the calendar below.
-                    Google Calendar will then ask for the information needed
-                    to complete your reservation.
+                    Select an available date and time below. Calendly
+                    will then ask for the information needed to complete
+                    your reservation.
                 </p>
 
                 <div
@@ -157,32 +168,42 @@
                     Loading appointment availability...
                 </div>
 
-                <div class="google-calendar-container">
+                <div class="calendly-container">
 
-                    <iframe
-                        id="bookingFrame"
-                        title="Google Calendar tutoring appointment scheduler"
-                        src="about:blank"
-                        loading="eager"
-                    ></iframe>
+                    <div
+                        id="calendlyEmbed"
+                        class="calendly-embed"
+                        aria-label="Calendly tutoring appointment scheduler"
+                    ></div>
 
                 </div>
 
                 <div class="booking-actions">
 
                     <p>
-                        Is the interactive calendar not displaying correctly?
+                        Having trouble viewing the scheduling interface?
                     </p>
 
-                    <a
-                        id="bookingButton"
-                        class="booking-button"
-                        href="#"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Open Booking Page in a New Tab
-                    </a>
+                    <div class="action-buttons">
+
+                        <a
+                            id="bookingButton"
+                            class="booking-button"
+                            href="https://calendly.com/mingbei-liu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Open Calendly in a New Tab
+                        </a>
+
+                        <a
+                            class="contact-button"
+                            href="mailto:mingbei.liu@gmail.com"
+                        >
+                            Email Us
+                        </a>
+
+                    </div>
 
                 </div>
 
@@ -190,7 +211,7 @@
 
             <section
                 class="appointment-information"
-                aria-label="Booking instructions"
+                aria-label="Appointment booking instructions"
             >
 
                 <article class="information-box">
@@ -217,12 +238,12 @@
                     </div>
 
                     <h3>
-                        Choose a Time
+                        Select a Time
                     </h3>
 
                     <p>
-                        Google Calendar will only display appointment
-                        times that are currently available.
+                        Calendly will display appointment times that
+                        are currently available.
                     </p>
 
                 </article>
@@ -238,8 +259,8 @@
                     </h3>
 
                     <p>
-                        After booking, Google Calendar will email you
-                        the appointment details.
+                        Calendly will email you the appointment details
+                        after your booking is completed.
                     </p>
 
                 </article>
@@ -253,7 +274,14 @@
     <footer>
 
         <p>
-            Tutoring appointments are subject to tutor availability.
+            Tutoring appointments are subject to availability.
+        </p>
+
+        <p>
+            Questions?
+            <a href="mailto:mingbei.liu@gmail.com">
+                mingbei.liu@gmail.com
+            </a>
         </p>
 
     </footer>
@@ -261,8 +289,20 @@
     <noscript>
 
         <div class="noscript-message">
-            JavaScript must be enabled to select a tutor and view
-            appointment availability.
+
+            <p>
+                JavaScript must be enabled to use the tutor-selection
+                and scheduling interface.
+            </p>
+
+            <a
+                href="https://calendly.com/mingbei-liu"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Open Calendly
+            </a>
+
         </div>
 
     </noscript>
