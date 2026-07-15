@@ -19,7 +19,7 @@ const tutors = [
             "Gaven specializes in mathematics, science, and helping " +
             "students develop strong problem-solving skills.",
         bookingLink:
-            "https://calendly.com/mingbei-liu/tutoring-with-gaven"
+            "https://calendly.com/gjesse-g/tutoring-with-gaven"
     },
 
     {
