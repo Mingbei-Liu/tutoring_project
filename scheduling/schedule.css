@@ -311,7 +311,8 @@ h1 {
 }
 
 .booking-button,
-.contact-button {
+.contact-button,
+.tutor-contact-button {
     display: inline-block;
     min-width: 220px;
     padding: 14px 24px;
@@ -352,8 +353,23 @@ h1 {
     transform: translateY(-2px);
 }
 
+.tutor-contact-button {
+    color: #304990;
+    background-color: #eef1ff;
+    border: 2px solid #aebbea;
+}
+
+.tutor-contact-button:hover,
+.tutor-contact-button:focus {
+    color: #ffffff;
+    background-color: #304990;
+    border-color: #304990;
+    transform: translateY(-2px);
+}
+
 .booking-button:active,
-.contact-button:active {
+.contact-button:active,
+.tutor-contact-button:active {
     transform: translateY(0);
 }
 
@@ -509,7 +525,8 @@ footer a {
     }
 
     .booking-button,
-    .contact-button {
+    .contact-button,
+    .tutor-contact-button {
         width: 100%;
     }
 }

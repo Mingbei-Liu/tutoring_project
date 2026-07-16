@@ -19,7 +19,9 @@ const tutors = [
             "Gaven specializes in mathematics, science, and helping " +
             "students develop strong problem-solving skills.",
         bookingLink:
-            "https://calendly.com/gjesse-g/tutoring-with-gaven"
+            "https://calendly.com/gjesse-g/tutoring-with-gaven",
+        email:
+            "gjesse@g.hmc.edu"
     },
 
     {
@@ -34,7 +36,9 @@ const tutors = [
             "Tommy helps students understand programming concepts " +
             "and build computational thinking skills.",
         bookingLink:
-            "https://calendly.com/mingbei-liu/tutoring-with-tommy"
+            "https://calendly.com/mingbei-liu/tutoring-with-tommy",
+        email:
+            "mingbei.liu@gmail.com"
     },
 
     {
@@ -56,7 +60,9 @@ const tutors = [
         bio:
             "Tori specializes in biology and statistics tutoring.",
         bookingLink:
-            "https://calendly.com/mingbei-liu/tutoring-with-tori"
+            "https://calendly.com/mingbei-liu/tutoring-with-tori",
+        email:
+            "torijesse@gmail.com"
     }
 ];
 
@@ -90,6 +96,9 @@ const calendlyEmbed =
 
 const bookingButton =
     document.getElementById("bookingButton");
+
+const contactTutorButton =
+    document.getElementById("contactTutorButton");
 
 const calendarStatus =
     document.getElementById("calendarStatus");
@@ -148,7 +157,9 @@ function isValidTutor(tutor) {
         typeof tutor.name === "string" &&
         Array.isArray(tutor.subjects) &&
         typeof tutor.bio === "string" &&
-        typeof tutor.bookingLink === "string"
+        typeof tutor.bookingLink === "string" &&
+        typeof tutor.email === "string" &&
+        tutor.email.includes("@")
     );
 }
 
@@ -272,6 +283,8 @@ function selectTutor(tutorId) {
 
     updateSelectedTutorInformation(tutor);
 
+    updateTutorContactButton(tutor);
+
     loadCalendlyWidget(tutor);
 
     selectedTutor.hidden = false;
@@ -328,6 +341,31 @@ function updateSelectedTutorInformation(tutor) {
         tutorInitials,
         tutor
     );
+}
+
+
+/*
+    Updates the contact button for the selected tutor.
+*/
+function updateTutorContactButton(tutor) {
+    const emailSubject =
+        encodeURIComponent(
+            `Tutoring Question for ${tutor.name}`
+        );
+
+    contactTutorButton.href =
+        `mailto:${tutor.email}?subject=${emailSubject}`;
+
+    contactTutorButton.textContent =
+        "Contact the Tutor";
+
+    contactTutorButton.setAttribute(
+        "aria-label",
+        `Email ${tutor.name} at ${tutor.email}`
+    );
+
+    contactTutorButton.title =
+        `Email ${tutor.name}: ${tutor.email}`;
 }
 
 
