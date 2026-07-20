@@ -1,321 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta
         name="description"
-        content="Choose a tutor, view their availability, and schedule a tutoring appointment through Calendly."
+        content="Choose a tutor and submit your weekly availability for a tutoring appointment."
     >
-
-    <title>Schedule a Tutoring Appointment</title>
-
-    <!-- Your scheduling-page stylesheet -->
-    <link
-        rel="stylesheet"
-        href="schedule.css"
-    >
-
-    <!-- Calendly's official embed stylesheet -->
-    <link
-        rel="stylesheet"
-        href="https://assets.calendly.com/assets/external/widget.css"
-    >
-
-    <!-- Calendly's official embed script -->
-    <script
-        src="https://assets.calendly.com/assets/external/widget.js"
-        type="text/javascript"
-        defer
-    ></script>
-
-    <!-- Your scheduling-page JavaScript -->
-    <script
-        src="schedule.js"
-        defer
-    ></script>
+    <title>Request a Tutoring Appointment</title>
+    <link rel="stylesheet" href="schedule.css">
+    <script src="config.js?v=2" defer></script>
+    <script src="schedule.js?v=2.1" defer></script>
 </head>
-
 <body>
-
     <main class="page-container">
-
-        <a
-            href="../index.html"
-            class="back-link"
-        >
-            ← Return to Home
-        </a>
+        <a href="../index.html" class="back-link">← Return to Home</a>
 
         <header class="page-header">
-
-            <h1>
-                Schedule a Tutoring Appointment
-            </h1>
-
+            <p class="eyebrow">Tutoring availability request</p>
+            <h1>Tell Us When You Are Available</h1>
             <p class="intro-text">
-                Choose a tutor to learn more about them, view their
-                availability, and reserve an appointment through Calendly.
+                Choose a tutor, enter your contact information, and click or drag across the timetable
+                to select every time that could work for you. We will contact you to confirm a session.
             </p>
-
         </header>
 
-        <section class="schedule-card">
-
-            <div
-                id="pageError"
-                class="page-error"
-                role="alert"
-                hidden
-            ></div>
-
-            <section
-                class="tutor-selection"
-                aria-labelledby="chooseTutorHeading"
-            >
-
-                <h2 id="chooseTutorHeading">
-                    Choose Your Tutor
-                </h2>
-
-                <p class="section-description">
-                    Select a tutor below to view their available
-                    appointment times.
-                </p>
-
-                <div
-                    id="tutorContainer"
-                    class="tutor-container"
-                    role="group"
-                    aria-label="Available tutors"
-                ></div>
-
-            </section>
-
-            <section
-                id="selectedTutor"
-                class="selected-tutor"
-                aria-live="polite"
-                hidden
-            >
-
-                <div class="selected-photo-container">
-
-                    <img
-                        id="tutorImage"
-                        class="selected-tutor-image"
-                        alt=""
-                        hidden
-                    >
-
-                    <div
-                        id="tutorInitials"
-                        class="selected-tutor-initials"
-                        aria-hidden="true"
-                        hidden
-                    ></div>
-
+        <form id="availabilityForm" class="request-card" novalidate>
+            <section class="form-section" aria-labelledby="tutorSelectionHeading">
+                <div class="section-heading">
+                    <div>
+                        <p class="step-label">Step 1</p>
+                        <h2 id="tutorSelectionHeading">Choose a tutor</h2>
+                    </div>
+                    <p>Select the tutor you would prefer to work with.</p>
                 </div>
 
-                <div class="selected-tutor-details">
-
-                    <p class="selected-label">
-                        Selected Tutor
-                    </p>
-
-                    <h2 id="tutorName"></h2>
-
-                    <p
-                        id="tutorSubjects"
-                        class="tutor-subjects"
-                    ></p>
-
-                    <p id="tutorBio"></p>
-
-                </div>
-
-            </section>
-
-            <section
-                id="bookingSection"
-                class="booking-section"
-                aria-labelledby="availableAppointmentsHeading"
-                hidden
-            >
-
-                <h2 id="availableAppointmentsHeading">
-                    Available Appointments
-                </h2>
-
-                <p class="calendar-instructions">
-                    Select an available date and time below with your tutor. 
-                    When you book the meeting, we kindly ask you to provide a one-sentence description
-                    of the topic that you would like to discuss. This would greatly help the tutor prepare
-                    for the meeting and thereby enhance your experience and outcome!
-                </p>
-
                 <div
-                    id="calendarStatus"
-                    class="calendar-status"
-                    role="status"
-                    aria-live="polite"
+                    id="tutorOptions"
+                    class="tutor-options"
+                    role="radiogroup"
+                    aria-labelledby="tutorSelectionHeading"
                 >
-                    Loading appointment availability...
+                    <label class="tutor-option">
+                        <input type="radio" name="tutor" value="gaven" required>
+                        <span class="tutor-option-card">
+                            <img src="../profile_pics/gaven_profile_pic.jpeg" alt="">
+                            <span class="tutor-option-copy">
+                                <strong>Gaven</strong>
+                                <span>Mathematics · Physics · Chemistry · Engineering</span>
+                            </span>
+                            <span class="selection-indicator" aria-hidden="true">✓</span>
+                        </span>
+                    </label>
+
+                    <label class="tutor-option">
+                        <input type="radio" name="tutor" value="tommy" required>
+                        <span class="tutor-option-card">
+                            <img src="../profile_pics/tommy_profile_pic.jpeg" alt="">
+                            <span class="tutor-option-copy">
+                                <strong>Tommy</strong>
+                                <span>Programming · Computer Science · Discrete Mathematics</span>
+                            </span>
+                            <span class="selection-indicator" aria-hidden="true">✓</span>
+                        </span>
+                    </label>
+
+                    <label class="tutor-option">
+                        <input type="radio" name="tutor" value="tori" required>
+                        <span class="tutor-option-card">
+                            <img src="../profile_pics/tori_profile_pic.jpeg" alt="">
+                            <span class="tutor-option-copy">
+                                <strong>Tori</strong>
+                                <span>Biology · Statistics · General Science</span>
+                            </span>
+                            <span class="selection-indicator" aria-hidden="true">✓</span>
+                        </span>
+                    </label>
                 </div>
-
-                <div class="calendly-container">
-
-                    <div
-                        id="calendlyEmbed"
-                        class="calendly-embed"
-                        aria-label="Calendly tutoring appointment scheduler"
-                    ></div>
-
-                </div>
-
-                <div class="booking-actions">
-
-                    <p>
-                        Having trouble viewing the scheduling interface?
-                    </p>
-
-                    <div class="action-buttons">
-
-                        <a
-                            id="bookingButton"
-                            class="booking-button"
-                            href="https://calendly.com/mingbei-liu"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Open Calendly in a New Tab
-                        </a>
-
-                        <a
-                            class="contact-button"
-                            href="mailto:mingbei.liu@gmail.com"
-                        >
-                            Contact Us
-                        </a>
-
-                        <a
-                            id="contactTutorButton"
-                            class="tutor-contact-button"
-                            href="mailto:gjesse@g.hmc.edu"
-                        >
-                            Contact the Tutor
-                        </a>
-
-                    </div>
-
-                </div>
-
             </section>
 
-            <section
-                class="appointment-information"
-                aria-label="Appointment booking instructions"
-            >
+            <section class="form-section" aria-labelledby="studentInformationHeading">
+                <div class="section-heading">
+                    <div>
+                        <p class="step-label">Step 2</p>
+                        <h2 id="studentInformationHeading">Your information</h2>
+                    </div>
+                    <p>Fields marked with <span aria-hidden="true">*</span> are required.</p>
+                </div>
 
-                <article class="information-box">
-
-                    <div class="step-number">
-                        1
+                <div class="form-grid">
+                    <div class="field field-wide-mobile">
+                        <label for="studentName">Name <span aria-hidden="true">*</span></label>
+                        <input
+                            id="studentName"
+                            name="name"
+                            type="text"
+                            autocomplete="name"
+                            maxlength="100"
+                            required
+                        >
                     </div>
 
-                    <h3>
-                        Choose a Tutor
-                    </h3>
-
-                    <p>
-                        Select the tutor whose availability you would
-                        like to view.
-                    </p>
-
-                </article>
-
-                <article class="information-box">
-
-                    <div class="step-number">
-                        2
+                    <div class="field">
+                        <label for="studentEmail">Email</label>
+                        <input
+                            id="studentEmail"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            maxlength="150"
+                            aria-describedby="contactRequirement"
+                        >
                     </div>
 
-                    <h3>
-                        Select a Time
-                    </h3>
-
-                    <p>
-                        Calendly will display appointment times that
-                        are currently available.
-                    </p>
-
-                </article>
-
-                <article class="information-box">
-
-                    <div class="step-number">
-                        3
+                    <div class="field">
+                        <label for="studentPhone">Phone number</label>
+                        <input
+                            id="studentPhone"
+                            name="phone"
+                            type="tel"
+                            autocomplete="tel"
+                            maxlength="40"
+                            aria-describedby="contactRequirement"
+                        >
                     </div>
 
-                    <h3>
-                        Receive Confirmation
-                    </h3>
-
-                    <p>
-                        Calendly will email you the appointment details
-                        after your booking is completed.
+                    <p id="contactRequirement" class="field-help form-grid-full">
+                        Please provide at least one contact method: an email address or phone number.
                     </p>
 
-                </article>
+                    <div class="field form-grid-full">
+                        <label for="subject">Subject or topic to be tutored <span aria-hidden="true">*</span></label>
+                        <input
+                            id="subject"
+                            name="subject"
+                            type="text"
+                            maxlength="180"
+                            placeholder="Example: Calculus II — integration techniques"
+                            required
+                        >
+                    </div>
 
+                    <div class="field">
+                        <label for="timezone">Time zone <span aria-hidden="true">*</span></label>
+                        <select id="timezone" name="timezone" required>
+                            <option value="">Select a time zone</option>
+                            <option value="America/Los_Angeles">Pacific Time</option>
+                            <option value="America/Denver">Mountain Time</option>
+                            <option value="America/Chicago">Central Time</option>
+                            <option value="America/New_York">Eastern Time</option>
+                            <option value="UTC">UTC</option>
+                        </select>
+                    </div>
+
+                    <div class="field form-grid-full">
+                        <label for="notes">Anything else we should know?</label>
+                        <textarea
+                            id="notes"
+                            name="notes"
+                            rows="4"
+                            maxlength="1500"
+                            placeholder="Optional: course level, upcoming test date, learning goals, or tutor flexibility"
+                        ></textarea>
+                    </div>
+                </div>
             </section>
 
-        </section>
+            <section class="form-section availability-section" aria-labelledby="availabilityHeading">
+                <div class="section-heading availability-heading-row">
+                    <div>
+                        <p class="step-label">Step 3</p>
+                        <h2 id="availabilityHeading">Weekly availability</h2>
+                        <p class="section-description">
+                            Select 30-minute intervals between 9:00 AM and 10:00 PM. Drag to select several intervals quickly.
+                        </p>
+                    </div>
 
+                    <button id="clearAllButton" class="secondary-button" type="button">
+                        Clear all
+                    </button>
+                </div>
+
+                <div class="selection-key" aria-hidden="true">
+                    <span class="key-swatch"></span>
+                    Selected availability
+                </div>
+
+                <div class="timetable-scroll" tabindex="0" aria-label="Scrollable weekly availability timetable">
+                    <div id="availabilityGrid" class="availability-grid" role="grid" aria-label="Weekly availability from 9 AM to 10 PM"></div>
+                </div>
+
+                <div class="availability-footer">
+                    <p id="selectionCount" class="selection-count" aria-live="polite">No time selected yet.</p>
+                    <div id="availabilitySummary" class="availability-summary" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <section class="form-section submit-section" aria-labelledby="submitHeading">
+                <div class="section-heading">
+                    <div>
+                        <p class="step-label">Step 4</p>
+                        <h2 id="submitHeading">Send your request</h2>
+                    </div>
+                </div>
+
+                <div class="honeypot" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+                </div>
+
+                <div id="formMessage" class="form-message" role="status" aria-live="polite" hidden></div>
+
+                <button id="submitButton" class="submit-button" type="submit">
+                    Submit availability
+                </button>
+
+                <p class="privacy-note">
+                    Your information will be used only to coordinate tutoring and will be sent to our scheduling team.
+                </p>
+            </section>
+        </form>
+
+        <iframe
+            id="submissionFrame"
+            name="submissionFrame"
+            class="submission-frame"
+            title="Availability submission response"
+            hidden
+        ></iframe>
     </main>
 
     <footer>
-
-        <p>
-            Tutoring appointments are subject to availability.
-        </p>
-
-        <p>
-            Questions?
-            <a href="mailto:mingbei.liu@gmail.com">
-                mingbei.liu@gmail.com
-            </a>
-        </p>
-
+        <p>Questions? <a href="mailto:mingbei.liu@gmail.com">mingbei.liu@gmail.com</a></p>
     </footer>
 
     <noscript>
-
         <div class="noscript-message">
-
-            <p>
-                JavaScript must be enabled to use the tutor-selection
-                and scheduling interface.
-            </p>
-
-            <a
-                href="https://calendly.com/mingbei-liu"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Open Calendly
-            </a>
-
+            JavaScript must be enabled to select and submit availability.
         </div>
-
     </noscript>
-
 </body>
-
 </html>

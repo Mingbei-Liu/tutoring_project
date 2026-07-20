@@ -1,568 +1,661 @@
 "use strict";
 
-/*
-    Tutor information is stored directly in this file so the
-    scheduling page can be opened locally without a server.
-*/
+// Static Google Apps Script submission flow — version 2.1
 
-const tutors = [
-    {
-        id: "gaven",
-        name: "Gaven",
-        photo: "../profile_pics/gaven_profile_pic.jpeg",
-        subjects: [
-            "Calculus",
-            "Physics",
-            "Chemistry"
-        ],
-        bio:
-            "Gaven specializes in mathematics, science, and helping " +
-            "students develop strong problem-solving skills.",
-        bookingLink:
-            "https://calendly.com/gjesse-g/tutoring-with-gaven",
-        email:
-            "gjesse@g.hmc.edu"
-    },
-
-    {
-        id: "tommy",
-        name: "Tommy",
-        photo: "../profile_pics/tommy_profile_pic.jpeg",
-        subjects: [
-            "Programming",
-            "Discrete Math"
-        ],
-        bio:
-            "Tommy helps students understand programming concepts " +
-            "and build computational thinking skills.",
-        bookingLink:
-            "https://calendly.com/mingbei-liu/tutoring-with-tommy",
-        email:
-            "mingbei.liu@gmail.com"
-    },
-
-    {
-        id: "tori",
-        name: "Tori",
-
-        /*
-            Add Tori's image path here when her picture is available.
-
-            Example:
-            photo: "../profile_pics/tori_profile_pic.jpeg"
-        */
-        photo: "",
-
-        subjects: [
-            "Biology",
-            "Statistics"
-        ],
-        bio:
-            "Tori specializes in biology and statistics tutoring.",
-        bookingLink:
-            "https://calendly.com/mingbei-liu/tutoring-with-tori",
-        email:
-            "torijesse@gmail.com"
-    }
+const DAYS = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
 ];
 
+const TUTORS = {
+    gaven: "Gaven",
+    tommy: "Tommy",
+    tori: "Tori"
+};
 
-const tutorContainer =
-    document.getElementById("tutorContainer");
+const START_MINUTES = 9 * 60;
+const END_MINUTES = 22 * 60;
+const SLOT_MINUTES = 30;
+const SUBMISSION_TIMEOUT_MS = 30000;
+const IFRAME_SUCCESS_DELAY_MS = 900;
 
-const selectedTutor =
-    document.getElementById("selectedTutor");
+const form = document.getElementById("availabilityForm");
+const tutorOptions = document.getElementById("tutorOptions");
+const availabilityGrid = document.getElementById("availabilityGrid");
+const clearAllButton = document.getElementById("clearAllButton");
+const selectionCount = document.getElementById("selectionCount");
+const availabilitySummary = document.getElementById("availabilitySummary");
+const submitButton = document.getElementById("submitButton");
+const formMessage = document.getElementById("formMessage");
+const timezoneSelect = document.getElementById("timezone");
+const emailInput = document.getElementById("studentEmail");
+const phoneInput = document.getElementById("studentPhone");
+const submissionFrame = document.getElementById("submissionFrame");
 
-const bookingSection =
-    document.getElementById("bookingSection");
+let isDragging = false;
+let dragShouldSelect = true;
+let submissionInProgress = false;
+let submissionTimeoutId = null;
+let submissionFrameLoadTimerId = null;
 
-const tutorImage =
-    document.getElementById("tutorImage");
+initialize();
 
-const tutorInitials =
-    document.getElementById("tutorInitials");
+function initialize() {
+    buildAvailabilityGrid();
+    setDetectedTimezone();
 
-const tutorName =
-    document.getElementById("tutorName");
+    availabilityGrid.addEventListener("pointermove", handlePointerMove);
+    clearAllButton.addEventListener("click", clearAllSlots);
+    form.addEventListener("submit", submitAvailability);
+    emailInput.addEventListener("input", clearContactErrors);
+    phoneInput.addEventListener("input", clearContactErrors);
+    tutorOptions.addEventListener("change", clearTutorError);
 
-const tutorSubjects =
-    document.getElementById("tutorSubjects");
+    window.addEventListener("pointerup", stopDragging);
+    window.addEventListener("pointercancel", stopDragging);
+    window.addEventListener("message", handleSubmissionMessage);
+    submissionFrame.addEventListener("load", handleSubmissionFrameLoad);
+}
 
-const tutorBio =
-    document.getElementById("tutorBio");
+function buildAvailabilityGrid() {
+    availabilityGrid.innerHTML = "";
 
-const calendlyEmbed =
-    document.getElementById("calendlyEmbed");
+    const corner = document.createElement("div");
+    corner.className = "grid-corner";
+    corner.setAttribute("role", "columnheader");
+    corner.textContent = "Time";
+    availabilityGrid.appendChild(corner);
 
-const bookingButton =
-    document.getElementById("bookingButton");
+    DAYS.forEach(function (day, dayIndex) {
+        const heading = document.createElement("div");
+        heading.className = "day-heading";
+        heading.setAttribute("role", "columnheader");
 
-const contactTutorButton =
-    document.getElementById("contactTutorButton");
+        const label = document.createElement("strong");
+        label.textContent = day;
 
-const calendarStatus =
-    document.getElementById("calendarStatus");
+        const dayAction = document.createElement("button");
+        dayAction.type = "button";
+        dayAction.className = "day-action";
+        dayAction.textContent = "Select day";
+        dayAction.dataset.dayIndex = String(dayIndex);
+        dayAction.addEventListener("click", toggleWholeDay);
 
-const pageError =
-    document.getElementById("pageError");
+        heading.append(label, dayAction);
+        availabilityGrid.appendChild(heading);
+    });
 
+    for (let start = START_MINUTES; start < END_MINUTES; start += SLOT_MINUTES) {
+        const isHourStart = start % 60 === 0;
+        const timeLabel = document.createElement("div");
+        timeLabel.className = "time-label" + (isHourStart ? " hour-start" : "");
+        timeLabel.setAttribute("role", "rowheader");
+        timeLabel.textContent = formatTime(start);
+        availabilityGrid.appendChild(timeLabel);
 
-document.addEventListener(
-    "DOMContentLoaded",
-    initializePage
-);
-
-
-/*
-    Creates the tutor cards and selects the first tutor.
-*/
-function initializePage() {
-    try {
-        if (!Array.isArray(tutors) || tutors.length === 0) {
-            throw new Error(
-                "No tutors have been added to schedule.js."
+        DAYS.forEach(function (day, dayIndex) {
+            const cell = document.createElement("button");
+            cell.type = "button";
+            cell.className = "time-slot" + (isHourStart ? " hour-start" : "");
+            cell.dataset.day = day;
+            cell.dataset.dayIndex = String(dayIndex);
+            cell.dataset.start = String(start);
+            cell.dataset.end = String(start + SLOT_MINUTES);
+            cell.setAttribute("role", "gridcell");
+            cell.setAttribute("aria-pressed", "false");
+            cell.setAttribute(
+                "aria-label",
+                `${day}, ${formatTime(start)} to ${formatTime(start + SLOT_MINUTES)}`
             );
-        }
 
-        const validTutors =
-            tutors.filter(isValidTutor);
+            cell.addEventListener("pointerdown", beginDragSelection);
+            cell.addEventListener("pointerenter", continueDragSelection);
+            cell.addEventListener("keydown", handleCellKeyboard);
 
-        if (validTutors.length === 0) {
-            throw new Error(
-                "No valid tutor records were found."
-            );
-        }
-
-        createTutorCards(validTutors);
-
-        selectTutor(validTutors[0].id);
-    } catch (error) {
-        console.error(error);
-
-        showPageError(
-            "The tutor information could not be loaded. " +
-            "Check the tutor information inside schedule.js."
-        );
+            availabilityGrid.appendChild(cell);
+        });
     }
 }
 
-
-/*
-    Checks that each tutor has all required information.
-*/
-function isValidTutor(tutor) {
-    return (
-        tutor &&
-        typeof tutor.id === "string" &&
-        typeof tutor.name === "string" &&
-        Array.isArray(tutor.subjects) &&
-        typeof tutor.bio === "string" &&
-        typeof tutor.bookingLink === "string" &&
-        typeof tutor.email === "string" &&
-        tutor.email.includes("@")
-    );
-}
-
-
-/*
-    Creates one selectable card for each tutor.
-*/
-function createTutorCards(tutorList) {
-    tutorContainer.innerHTML = "";
-
-    tutorList.forEach(function (tutor) {
-        const card =
-            document.createElement("button");
-
-        card.type = "button";
-        card.className = "tutor-card";
-        card.dataset.tutorId = tutor.id;
-
-        card.setAttribute(
-            "aria-pressed",
-            "false"
-        );
-
-
-        const photoWrapper =
-            document.createElement("div");
-
-        photoWrapper.className =
-            "tutor-photo-wrapper";
-
-
-        const photo =
-            document.createElement("img");
-
-        photo.className =
-            "tutor-card-image";
-
-        photo.alt =
-            `${tutor.name} profile picture`;
-
-
-        const initials =
-            document.createElement("div");
-
-        initials.className =
-            "tutor-card-initials";
-
-        initials.textContent =
-            getInitials(tutor.name);
-
-        initials.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-        initials.hidden = true;
-
-
-        configurePhoto(
-            photo,
-            initials,
-            tutor
-        );
-
-
-        const name =
-            document.createElement("h3");
-
-        name.textContent =
-            tutor.name;
-
-
-        const subjects =
-            document.createElement("p");
-
-        subjects.textContent =
-            tutor.subjects.join(", ");
-
-
-        photoWrapper.appendChild(photo);
-        photoWrapper.appendChild(initials);
-
-        card.appendChild(photoWrapper);
-        card.appendChild(name);
-        card.appendChild(subjects);
-
-
-        card.addEventListener(
-            "click",
-            function () {
-                selectTutor(tutor.id);
-            }
-        );
-
-
-        tutorContainer.appendChild(card);
-    });
-}
-
-
-/*
-    Selects a tutor and loads their Calendly page.
-*/
-function selectTutor(tutorId) {
-    const tutor =
-        tutors.find(function (item) {
-            return item.id === tutorId;
-        });
-
-    if (!tutor) {
-        showPageError(
-            "The selected tutor could not be found."
-        );
-
+function beginDragSelection(event) {
+    if (event.button !== 0 && event.pointerType === "mouse") {
         return;
     }
 
-    pageError.hidden = true;
-
-    updateActiveTutorCard(tutor.id);
-
-    updateSelectedTutorInformation(tutor);
-
-    updateTutorContactButton(tutor);
-
-    loadCalendlyWidget(tutor);
-
-    selectedTutor.hidden = false;
-
-    bookingSection.hidden = false;
+    event.preventDefault();
+    isDragging = true;
+    dragShouldSelect = !event.currentTarget.classList.contains("selected");
+    setCellSelected(event.currentTarget, dragShouldSelect);
 }
 
+function continueDragSelection(event) {
+    if (!isDragging) {
+        return;
+    }
 
-/*
-    Highlights the selected tutor card.
-*/
-function updateActiveTutorCard(tutorId) {
-    const cards =
-        document.querySelectorAll(
-            ".tutor-card"
+    setCellSelected(event.currentTarget, dragShouldSelect);
+}
+
+function handlePointerMove(event) {
+    if (!isDragging) {
+        return;
+    }
+
+    event.preventDefault();
+    const element = document.elementFromPoint(event.clientX, event.clientY);
+    const cell = element ? element.closest(".time-slot") : null;
+
+    if (cell && availabilityGrid.contains(cell)) {
+        setCellSelected(cell, dragShouldSelect);
+    }
+}
+
+function stopDragging() {
+    if (!isDragging) {
+        return;
+    }
+
+    isDragging = false;
+    updateAvailabilityDisplay();
+}
+
+function handleCellKeyboard(event) {
+    if (event.key !== "Enter" && event.key !== " ") {
+        return;
+    }
+
+    event.preventDefault();
+    const cell = event.currentTarget;
+    setCellSelected(cell, !cell.classList.contains("selected"));
+    updateAvailabilityDisplay();
+}
+
+function setCellSelected(cell, shouldSelect) {
+    cell.classList.toggle("selected", shouldSelect);
+    cell.setAttribute("aria-pressed", String(shouldSelect));
+}
+
+function toggleWholeDay(event) {
+    const dayIndex = event.currentTarget.dataset.dayIndex;
+    const dayCells = Array.from(
+        document.querySelectorAll(`.time-slot[data-day-index="${dayIndex}"]`)
+    );
+    const shouldSelect = dayCells.some(function (cell) {
+        return !cell.classList.contains("selected");
+    });
+
+    dayCells.forEach(function (cell) {
+        setCellSelected(cell, shouldSelect);
+    });
+
+    updateAvailabilityDisplay();
+}
+
+function clearAllSlots() {
+    document.querySelectorAll(".time-slot.selected").forEach(function (cell) {
+        setCellSelected(cell, false);
+    });
+
+    updateAvailabilityDisplay();
+}
+
+function updateAvailabilityDisplay() {
+    const selectedCells = getSelectedCells();
+    const intervalCount = selectedCells.length;
+    const totalHours = intervalCount * SLOT_MINUTES / 60;
+
+    if (intervalCount === 0) {
+        selectionCount.textContent = "No time selected yet.";
+        availabilitySummary.innerHTML = "";
+    } else {
+        selectionCount.textContent = `${formatDuration(totalHours)} selected.`;
+        renderAvailabilitySummary(buildAvailabilityPayload());
+    }
+
+    DAYS.forEach(function (day, dayIndex) {
+        const dayCells = Array.from(
+            document.querySelectorAll(`.time-slot[data-day-index="${dayIndex}"]`)
         );
+        const selectedForDay = dayCells.filter(function (cell) {
+            return cell.classList.contains("selected");
+        }).length;
+        const action = document.querySelector(`.day-action[data-day-index="${dayIndex}"]`);
 
-    cards.forEach(function (card) {
-        const isActive =
-            card.dataset.tutorId === tutorId;
-
-        card.classList.toggle(
-            "active",
-            isActive
-        );
-
-        card.setAttribute(
-            "aria-pressed",
-            String(isActive)
-        );
+        if (action) {
+            action.textContent = selectedForDay === dayCells.length ? "Clear day" : "Select day";
+            action.setAttribute(
+                "aria-label",
+                `${selectedForDay === dayCells.length ? "Clear" : "Select"} all ${day} time slots`
+            );
+        }
     });
 }
 
-
-/*
-    Updates the selected-tutor information panel.
-*/
-function updateSelectedTutorInformation(tutor) {
-    tutorName.textContent =
-        tutor.name;
-
-    tutorSubjects.textContent =
-        "Subjects: " +
-        tutor.subjects.join(", ");
-
-    tutorBio.textContent =
-        tutor.bio;
-
-    tutorImage.alt =
-        `${tutor.name} profile picture`;
-
-    configurePhoto(
-        tutorImage,
-        tutorInitials,
-        tutor
-    );
+function getSelectedCells() {
+    return Array.from(document.querySelectorAll(".time-slot.selected"));
 }
 
+function buildAvailabilityPayload() {
+    return DAYS.map(function (day) {
+        const starts = getSelectedCells()
+            .filter(function (cell) {
+                return cell.dataset.day === day;
+            })
+            .map(function (cell) {
+                return Number(cell.dataset.start);
+            })
+            .sort(function (a, b) {
+                return a - b;
+            });
 
-/*
-    Updates the contact button for the selected tutor.
-*/
-function updateTutorContactButton(tutor) {
-    const emailSubject =
-        encodeURIComponent(
-            `Tutoring Question for ${tutor.name}`
-        );
+        const intervals = [];
 
-    contactTutorButton.href =
-        `mailto:${tutor.email}?subject=${emailSubject}`;
+        starts.forEach(function (start) {
+            const lastInterval = intervals[intervals.length - 1];
 
-    contactTutorButton.textContent =
-        "Contact the Tutor";
-
-    contactTutorButton.setAttribute(
-        "aria-label",
-        `Email ${tutor.name} at ${tutor.email}`
-    );
-
-    contactTutorButton.title =
-        `Email ${tutor.name}: ${tutor.email}`;
-}
-
-
-/*
-    Loads the selected tutor's Calendly event inside the page.
-*/
-function loadCalendlyWidget(tutor) {
-    try {
-        validateCalendlyLink(
-            tutor.bookingLink
-        );
-
-        bookingButton.href =
-            tutor.bookingLink;
-
-        bookingButton.textContent =
-            `Open ${tutor.name}'s Calendly Page`;
-
-        calendlyEmbed.setAttribute(
-            "aria-label",
-            `Schedule a tutoring appointment with ${tutor.name}`
-        );
-
-        calendarStatus.hidden = false;
-
-        calendarStatus.classList.remove(
-            "error"
-        );
-
-        calendarStatus.textContent =
-            `Loading ${tutor.name}'s available appointments...`;
-
-        /*
-            Remove the previous tutor's Calendly iframe before
-            creating the newly selected tutor's scheduler.
-        */
-        calendlyEmbed.innerHTML = "";
-
-
-        if (
-            !window.Calendly ||
-            typeof window.Calendly.initInlineWidget !== "function"
-        ) {
-            throw new Error(
-                "The Calendly embed script could not be loaded."
-            );
-        }
-
-
-        window.Calendly.initInlineWidget({
-            url: tutor.bookingLink,
-            parentElement: calendlyEmbed
+            if (lastInterval && lastInterval.end === start) {
+                lastInterval.end = start + SLOT_MINUTES;
+            } else {
+                intervals.push({
+                    start: start,
+                    end: start + SLOT_MINUTES
+                });
+            }
         });
 
-
-        /*
-            Calendly creates an iframe inside the container.
-            Add an accessible title and hide the loading message
-            after the iframe finishes loading.
-        */
-        window.setTimeout(
-            function () {
-                const calendlyFrame =
-                    calendlyEmbed.querySelector(
-                        "iframe"
-                    );
-
-                if (calendlyFrame) {
-                    calendlyFrame.title =
-                        `Book a tutoring appointment with ${tutor.name}`;
-
-                    calendlyFrame.addEventListener(
-                        "load",
-                        function () {
-                            calendarStatus.hidden = true;
-                        },
-                        {
-                            once: true
-                        }
-                    );
-
-                    /*
-                        Hide the status even if the iframe loaded
-                        before the event listener was attached.
-                    */
-                    window.setTimeout(
-                        function () {
-                            calendarStatus.hidden = true;
-                        },
-                        1000
-                    );
-                } else {
-                    calendarStatus.hidden = true;
-                }
-            },
-            100
-        );
-    } catch (error) {
-        console.error(error);
-
-        calendlyEmbed.innerHTML = "";
-
-        calendarStatus.hidden = false;
-
-        calendarStatus.classList.add(
-            "error"
-        );
-
-        calendarStatus.textContent =
-            "The embedded scheduler could not be loaded. " +
-            "Use the button below to open the tutor's Calendly page.";
-    }
-}
-
-
-/*
-    Confirms that the booking URL is a Calendly link.
-*/
-function validateCalendlyLink(bookingLink) {
-    const url =
-        new URL(bookingLink);
-
-    if (
-        url.protocol !== "https:" ||
-        url.hostname !== "calendly.com"
-    ) {
-        throw new Error(
-            "The tutor booking link must use calendly.com."
-        );
-    }
-}
-
-
-/*
-    Displays the tutor's initials when their image is unavailable.
-*/
-function configurePhoto(
-    imageElement,
-    initialsElement,
-    tutor
-) {
-    initialsElement.textContent =
-        getInitials(tutor.name);
-
-    imageElement.onerror =
-        function () {
-            imageElement.hidden = true;
-            initialsElement.hidden = false;
+        return {
+            day: day,
+            intervals: intervals.map(function (interval) {
+                return {
+                    start: minutesTo24Hour(interval.start),
+                    end: minutesTo24Hour(interval.end)
+                };
+            })
         };
+    }).filter(function (dayEntry) {
+        return dayEntry.intervals.length > 0;
+    });
+}
 
-    if (
-        typeof tutor.photo === "string" &&
-        tutor.photo.trim() !== ""
-    ) {
-        initialsElement.hidden = true;
-        imageElement.hidden = false;
-        imageElement.src = tutor.photo;
-    } else {
-        imageElement.removeAttribute(
-            "src"
+function renderAvailabilitySummary(availability) {
+    const list = document.createElement("ul");
+    list.className = "summary-list";
+
+    availability.forEach(function (dayEntry) {
+        const item = document.createElement("li");
+        const strong = document.createElement("strong");
+        strong.textContent = `${dayEntry.day}: `;
+
+        const text = document.createTextNode(
+            dayEntry.intervals.map(function (interval) {
+                return `${formatTime(parseTime(interval.start))}–${formatTime(parseTime(interval.end))}`;
+            }).join(", ")
         );
 
-        imageElement.hidden = true;
-        initialsElement.hidden = false;
+        item.append(strong, text);
+        list.appendChild(item);
+    });
+
+    availabilitySummary.innerHTML = "";
+    availabilitySummary.appendChild(list);
+}
+
+function submitAvailability(event) {
+    event.preventDefault();
+    hideMessage();
+    clearFieldErrors();
+
+    const availability = buildAvailabilityPayload();
+    const formData = new FormData(form);
+    const data = {
+        tutor: String(formData.get("tutor") || "").trim(),
+        name: String(formData.get("name") || "").trim(),
+        email: String(formData.get("email") || "").trim(),
+        phone: String(formData.get("phone") || "").trim(),
+        subject: String(formData.get("subject") || "").trim(),
+        timezone: String(formData.get("timezone") || "").trim(),
+        notes: String(formData.get("notes") || "").trim(),
+        website: String(formData.get("website") || "").trim(),
+        availability: availability
+    };
+
+    const firstInvalidField = validateForm(data);
+    if (firstInvalidField) {
+        firstInvalidField.focus();
+        return;
+    }
+
+    const endpoint = getSubmissionEndpoint();
+    if (!endpoint) {
+        showMessage(
+            "error",
+            "Submission setup is incomplete. Paste the deployed Google Apps Script /exec URL into scheduling/config.js."
+        );
+        scrollToMessage();
+        return;
+    }
+
+    startSubmission();
+
+    const outgoingForm = document.createElement("form");
+    outgoingForm.method = "POST";
+    outgoingForm.action = endpoint;
+    outgoingForm.target = submissionFrame.name;
+    outgoingForm.style.display = "none";
+
+    const fields = {
+        tutor: data.tutor,
+        tutorName: TUTORS[data.tutor] || data.tutor,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        subject: data.subject,
+        timezone: data.timezone,
+        notes: data.notes,
+        website: data.website,
+        availability: JSON.stringify(data.availability),
+        availabilityText: formatAvailabilityForSubmission(data.availability),
+        clientSubmittedAt: new Date().toISOString(),
+        sourcePage: window.location.href
+    };
+
+    Object.entries(fields).forEach(function ([name, value]) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
+        outgoingForm.appendChild(input);
+    });
+
+    document.body.appendChild(outgoingForm);
+    outgoingForm.submit();
+    outgoingForm.remove();
+}
+
+function getSubmissionEndpoint() {
+    const endpoint = String(window.TUTORING_FORM_ENDPOINT || "").trim();
+
+    if (
+        !endpoint ||
+        endpoint === "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE"
+    ) {
+        return "";
+    }
+
+    try {
+        const url = new URL(endpoint);
+        const isGoogleScript =
+            url.protocol === "https:" &&
+            url.hostname === "script.google.com" &&
+            url.pathname.startsWith("/macros/s/") &&
+            url.pathname.endsWith("/exec");
+
+        return isGoogleScript ? url.href : "";
+    } catch (error) {
+        return "";
     }
 }
 
+function startSubmission() {
+    submissionInProgress = true;
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting…";
 
-/*
-    Creates initials from a tutor's name.
-*/
-function getInitials(name) {
-    return name
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map(function (part) {
-            return part
-                .charAt(0)
-                .toUpperCase();
-        })
-        .join("");
+    window.clearTimeout(submissionTimeoutId);
+    submissionTimeoutId = window.setTimeout(function () {
+        if (!submissionInProgress) {
+            return;
+        }
+
+        finishSubmission();
+        showMessage(
+            "error",
+            "The request could not be confirmed. Check your internet connection, then try submitting again."
+        );
+        scrollToMessage();
+    }, SUBMISSION_TIMEOUT_MS);
 }
 
+function handleSubmissionFrameLoad() {
+    if (!submissionInProgress) {
+        return;
+    }
 
-/*
-    Displays a page-level error.
-*/
-function showPageError(message) {
-    pageError.textContent =
-        message;
+    window.clearTimeout(submissionFrameLoadTimerId);
+    submissionFrameLoadTimerId = window.setTimeout(function () {
+        if (!submissionInProgress) {
+            return;
+        }
 
-    pageError.hidden = false;
+        finishSubmission();
+        showMessage(
+            "success",
+            "Your availability request was sent successfully. We will contact you after reviewing the times you selected."
+        );
+        resetSubmittedForm();
+        scrollToMessage();
+    }, IFRAME_SUCCESS_DELAY_MS);
+}
 
-    tutorContainer.innerHTML = "";
+function handleSubmissionMessage(event) {
+    if (!submissionInProgress || event.source !== submissionFrame.contentWindow) {
+        return;
+    }
 
-    selectedTutor.hidden = true;
+    const result = event.data;
 
-    bookingSection.hidden = true;
+    if (
+        !result ||
+        typeof result !== "object" ||
+        result.type !== "tutoringAvailabilityResult"
+    ) {
+        return;
+    }
+
+    finishSubmission();
+
+    if (!result.success) {
+        showMessage(
+            "error",
+            result.message || "Your request could not be submitted. Please try again."
+        );
+        scrollToMessage();
+        return;
+    }
+
+    if (result.emailSent === false) {
+        showMessage(
+            "warning",
+            "Your request reached the form, but the notification email could not be sent. Please email mingbei.liu@gmail.com directly."
+        );
+    } else if (result.sheetSaved === false) {
+        showMessage(
+            "success",
+            "Your availability request was emailed successfully. The backup Google Sheet log was not updated, but no further action is needed."
+        );
+    } else {
+        showMessage(
+            "success",
+            "Your availability request was sent successfully. We will contact you after reviewing the times you selected."
+        );
+    }
+
+    resetSubmittedForm();
+    scrollToMessage();
+}
+
+function resetSubmittedForm() {
+    form.reset();
+    clearAllSlots();
+    clearTutorError();
+    setDetectedTimezone();
+}
+
+function finishSubmission() {
+    submissionInProgress = false;
+    window.clearTimeout(submissionTimeoutId);
+    window.clearTimeout(submissionFrameLoadTimerId);
+    submissionTimeoutId = null;
+    submissionFrameLoadTimerId = null;
+    submitButton.disabled = false;
+    submitButton.textContent = "Submit availability";
+}
+
+function formatAvailabilityForSubmission(availability) {
+    return availability.map(function (dayEntry) {
+        const times = dayEntry.intervals.map(function (interval) {
+            return `${formatTime(parseTime(interval.start))}–${formatTime(parseTime(interval.end))}`;
+        }).join(", ");
+
+        return `${dayEntry.day}: ${times}`;
+    }).join("\n");
+}
+
+function validateForm(data) {
+    let firstInvalid = null;
+
+    const selectedTutor = form.querySelector('input[name="tutor"]:checked');
+    if (!data.tutor || !selectedTutor) {
+        tutorOptions.setAttribute("aria-invalid", "true");
+        firstInvalid = form.querySelector('input[name="tutor"]');
+        showMessage("error", "Please choose a tutor.");
+    }
+
+    const requiredFields = [
+        [document.getElementById("studentName"), data.name],
+        [document.getElementById("subject"), data.subject],
+        [timezoneSelect, data.timezone]
+    ];
+
+    requiredFields.forEach(function ([field, value]) {
+        if (!value) {
+            markInvalid(field);
+            firstInvalid = firstInvalid || field;
+        }
+    });
+
+    if (!data.email && !data.phone) {
+        markInvalid(emailInput);
+        markInvalid(phoneInput);
+        firstInvalid = firstInvalid || emailInput;
+        showMessage("error", "Please enter either an email address or a phone number.");
+    } else if (data.email && !isValidEmail(data.email)) {
+        markInvalid(emailInput);
+        firstInvalid = firstInvalid || emailInput;
+        showMessage("error", "Please enter a valid email address.");
+    }
+
+    if (data.availability.length === 0) {
+        firstInvalid = firstInvalid || availabilityGrid.querySelector(".time-slot");
+        showMessage("error", "Please select at least one available 30-minute interval.");
+    }
+
+    if (firstInvalid && formMessage.hidden) {
+        showMessage("error", "Please complete all required fields.");
+    }
+
+    return firstInvalid;
+}
+
+function markInvalid(field) {
+    field.setAttribute("aria-invalid", "true");
+}
+
+function clearFieldErrors() {
+    form.querySelectorAll("[aria-invalid='true']").forEach(function (field) {
+        field.removeAttribute("aria-invalid");
+    });
+
+    clearTutorError();
+}
+
+function clearTutorError() {
+    tutorOptions.removeAttribute("aria-invalid");
+}
+
+function clearContactErrors() {
+    emailInput.removeAttribute("aria-invalid");
+    phoneInput.removeAttribute("aria-invalid");
+}
+
+function showMessage(type, message) {
+    formMessage.className = `form-message ${type}`;
+    formMessage.textContent = message;
+    formMessage.hidden = false;
+}
+
+function hideMessage() {
+    formMessage.hidden = true;
+    formMessage.textContent = "";
+    formMessage.className = "form-message";
+}
+
+function scrollToMessage() {
+    window.scrollTo({
+        top: formMessage.getBoundingClientRect().top + window.scrollY - 24,
+        behavior: "smooth"
+    });
+}
+
+function setDetectedTimezone() {
+    let detectedTimezone = "";
+
+    try {
+        detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    } catch (error) {
+        detectedTimezone = "";
+    }
+
+    if (!detectedTimezone) {
+        return;
+    }
+
+    const existingOption = Array.from(timezoneSelect.options).find(function (option) {
+        return option.value === detectedTimezone;
+    });
+
+    if (!existingOption) {
+        const detectedOption = document.createElement("option");
+        detectedOption.value = detectedTimezone;
+        detectedOption.textContent = `${detectedTimezone.replaceAll("_", " ")} (detected)`;
+        timezoneSelect.appendChild(detectedOption);
+    }
+
+    timezoneSelect.value = detectedTimezone;
+}
+
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function minutesTo24Hour(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+}
+
+function parseTime(value) {
+    const [hours, minutes] = value.split(":").map(Number);
+    return hours * 60 + minutes;
+}
+
+function formatTime(minutes) {
+    const normalizedHours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const suffix = normalizedHours >= 12 ? "PM" : "AM";
+    const displayHours = normalizedHours % 12 || 12;
+    return `${displayHours}:${String(mins).padStart(2, "0")} ${suffix}`;
+}
+
+function formatDuration(hours) {
+    if (Number.isInteger(hours)) {
+        return `${hours} ${hours === 1 ? "hour" : "hours"}`;
+    }
+
+    return `${hours.toFixed(1)} hours`;
 }
