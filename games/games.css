@@ -1,0 +1,364 @@
+:root {
+    --game-card-shadow:
+        0 24px 70px rgba(38, 57, 110, 0.16);
+}
+
+body.games-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 10% 8%,
+            rgba(244, 184, 96, 0.19),
+            transparent 25rem
+        ),
+        radial-gradient(
+            circle at 92% 12%,
+            rgba(64, 93, 175, 0.16),
+            transparent 30rem
+        ),
+        linear-gradient(
+            180deg,
+            #f8faff 0%,
+            #eef2ff 48%,
+            #ffffff 100%
+        );
+}
+
+.main-navigation > a[aria-current="page"] {
+    color: var(--primary);
+}
+
+.main-navigation > a[aria-current="page"]::after {
+    transform: scaleX(1);
+}
+
+.game-page-main {
+    width: min(1000px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 40px 0 90px;
+}
+
+.game-back-link {
+    display: inline-block;
+    margin-bottom: 38px;
+    color: var(--primary);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.game-back-link:hover,
+.game-back-link:focus-visible {
+    text-decoration: underline;
+}
+
+.game-introduction {
+    max-width: 780px;
+    margin: 0 auto 42px;
+    text-align: center;
+}
+
+.game-introduction h1 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(46px, 8vw, 76px);
+    line-height: 1.02;
+    letter-spacing: -0.05em;
+}
+
+.game-introduction > p:last-child {
+    max-width: 690px;
+    margin: 21px auto 0;
+    color: var(--muted);
+    font-size: 18px;
+}
+
+.challenge-card {
+    padding: 48px;
+    background:
+        radial-gradient(
+            circle at 88% 10%,
+            rgba(64, 93, 175, 0.09),
+            transparent 17rem
+        ),
+        rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(226, 230, 240, 0.95);
+    border-radius: 30px;
+    box-shadow: var(--game-card-shadow);
+}
+
+.challenge-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 28px;
+}
+
+.challenge-label,
+.solution-label {
+    margin: 0 0 5px;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.challenge-card-header h2 {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+}
+
+.puzzle-status {
+    flex: 0 0 auto;
+    padding: 8px 13px;
+    color: #245b36;
+    background: #edf9f0;
+    border: 1px solid #bfe0c8;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.number-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin: 45px 0 30px;
+}
+
+.number-card {
+    display: grid;
+    min-height: 150px;
+    place-items: center;
+    color: #ffffff;
+    background:
+        radial-gradient(
+            circle at 25% 20%,
+            rgba(255, 255, 255, 0.22),
+            transparent 38%
+        ),
+        linear-gradient(
+            145deg,
+            var(--primary),
+            #7387d4
+        );
+    border: 1px solid rgba(47, 71, 141, 0.28);
+    border-radius: 24px;
+    box-shadow:
+        0 15px 30px rgba(64, 93, 175, 0.22);
+    font-size: clamp(54px, 8vw, 76px);
+    font-weight: 900;
+    line-height: 1;
+    transform: translateY(0);
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.number-card:hover {
+    box-shadow:
+        0 20px 38px rgba(64, 93, 175, 0.27);
+    transform: translateY(-4px);
+}
+
+.game-rules {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 14px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.game-rules span {
+    padding: 7px 11px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+}
+
+.game-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 13px;
+    margin-top: 34px;
+}
+
+.game-primary-button,
+.game-secondary-button {
+    min-width: 175px;
+    min-height: 50px;
+    padding: 12px 21px;
+    border-radius: 10px;
+    font-weight: 900;
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.game-primary-button {
+    color: #ffffff;
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    box-shadow:
+        0 11px 24px rgba(64, 93, 175, 0.21);
+}
+
+.game-primary-button:hover,
+.game-primary-button:focus-visible {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.game-secondary-button {
+    color: var(--primary);
+    background: #ffffff;
+    border: 1px solid #b8c1dd;
+}
+
+.game-secondary-button:hover,
+.game-secondary-button:focus-visible {
+    color: #ffffff;
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.solution-panel {
+    margin-top: 32px;
+    padding: 27px;
+    background:
+        linear-gradient(
+            145deg,
+            #f6f8ff,
+            #ffffff
+        );
+    border: 1px solid #ccd5f1;
+    border-radius: 17px;
+    text-align: center;
+}
+
+.solution-expression {
+    margin: 8px 0;
+    color: var(--primary-dark);
+    font-family:
+        "Courier New",
+        Courier,
+        monospace;
+    font-size: clamp(23px, 4vw, 35px);
+    font-weight: 900;
+    overflow-wrap: anywhere;
+}
+
+.solution-note {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.game-explanation {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+    gap: 55px;
+    margin-top: 55px;
+    padding: 40px 44px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+}
+
+.game-explanation h2 {
+    margin: 0;
+    font-size: clamp(27px, 4vw, 38px);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+}
+
+.game-explanation > p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+@media (max-width: 760px) {
+    .game-page-main {
+        width: min(100% - 26px, 1000px);
+        padding-top: 28px;
+    }
+
+    .challenge-card {
+        padding: 32px 24px;
+        border-radius: 23px;
+    }
+
+    .challenge-card-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .number-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .number-card {
+        min-height: 125px;
+    }
+
+    .game-explanation {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        padding: 31px 26px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-page-main {
+        width: min(100% - 16px, 1000px);
+    }
+
+    .game-introduction h1 {
+        font-size: 45px;
+    }
+
+    .game-introduction > p:last-child {
+        font-size: 16px;
+    }
+
+    .challenge-card {
+        padding: 25px 17px;
+    }
+
+    .number-cards {
+        gap: 11px;
+        margin-top: 32px;
+    }
+
+    .number-card {
+        min-height: 105px;
+        border-radius: 18px;
+        font-size: 50px;
+    }
+
+    .game-primary-button,
+    .game-secondary-button {
+        width: 100%;
+    }
+}

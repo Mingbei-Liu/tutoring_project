@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Play the 24 Game and practice arithmetic, logical reasoning, and flexible problem solving."
+    >
+
+    <title>The 24 Game | Our Tutoring Program</title>
+
+    <!-- Reuse the main website design. -->
+    <link
+        rel="stylesheet"
+        href="../styles.css"
+    >
+
+    <!-- Styles used only by the games page. -->
+    <link
+        rel="stylesheet"
+        href="games.css"
+    >
+
+    <script
+        src="make_24.js"
+        defer
+    ></script>
+</head>
+
+<body class="games-page">
+
+    <header class="site-header">
+        <div class="nav-container">
+
+            <a
+                class="brand"
+                href="../index.html"
+                aria-label="Our Tutoring Program home"
+            >
+                <span
+                    class="brand-mark"
+                    aria-hidden="true"
+                >
+                    OT
+                </span>
+
+                <span class="brand-text">
+                    <strong>Our Tutoring</strong>
+                    <span>Accessible, confidence-building STEM support</span>
+                </span>
+            </a>
+
+            <button
+                id="menuButton"
+                class="menu-button"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mainNavigation"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav
+                id="mainNavigation"
+                class="main-navigation"
+                aria-label="Main navigation"
+            >
+                <a href="../index.html#home">Home</a>
+                <a href="../index.html#subjects">Subjects</a>
+                <a href="../index.html#tutors">Tutors</a>
+
+                <a
+                    href="games.html"
+                    aria-current="page"
+                >
+                    Games
+                </a>
+
+                <a href="../scheduling/schedule.html">Schedule</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="game-page-main">
+
+        <a
+            class="game-back-link"
+            href="../index.html"
+        >
+            ← Return to Home
+        </a>
+
+        <section
+            class="game-introduction"
+            aria-labelledby="gameTitle"
+        >
+            <p class="eyebrow">
+                Arithmetic challenge
+            </p>
+
+            <h1 id="gameTitle">
+                The 24 Game
+            </h1>
+
+            <p>
+                Use each of the four numbers exactly once to make 24.
+                You may use addition, subtraction, multiplication, division,
+                and parentheses.
+            </p>
+        </section>
+
+        <section
+            class="challenge-card"
+            aria-labelledby="challengeHeading"
+        >
+            <div class="challenge-card-header">
+                <div>
+                    <p class="challenge-label">
+                        Your four numbers
+                    </p>
+
+                    <h2 id="challengeHeading">
+                        Can you make 24?
+                    </h2>
+                </div>
+
+                <span
+                    id="puzzleStatus"
+                    class="puzzle-status"
+                    aria-live="polite"
+                >
+                    Solvable puzzle
+                </span>
+            </div>
+
+            <div
+                id="numberCards"
+                class="number-cards"
+                aria-label="The four numbers for this puzzle"
+            >
+                <div class="number-card">3</div>
+                <div class="number-card">3</div>
+                <div class="number-card">8</div>
+                <div class="number-card">8</div>
+            </div>
+
+            <div class="game-rules">
+                <span>Use every number once</span>
+                <span>Target: 24</span>
+                <span>Allowed: + − × ÷ ( )</span>
+            </div>
+
+            <div class="game-actions">
+                <button
+                    id="newPuzzleButton"
+                    class="game-primary-button"
+                    type="button"
+                >
+                    New Puzzle
+                </button>
+
+                <button
+                    id="solutionButton"
+                    class="game-secondary-button"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="solutionPanel"
+                >
+                    View Solution
+                </button>
+            </div>
+
+            <div
+                id="solutionPanel"
+                class="solution-panel"
+                hidden
+            >
+                <p class="solution-label">
+                    One possible solution
+                </p>
+
+                <p
+                    id="solutionExpression"
+                    class="solution-expression"
+                >
+                    8 ÷ (3 − 8 ÷ 3) = 24
+                </p>
+
+                <p class="solution-note">
+                    Other valid solutions may also exist.
+                </p>
+            </div>
+
+            <p
+                id="gameAnnouncement"
+                class="visually-hidden"
+                aria-live="polite"
+            ></p>
+        </section>
+
+        <section class="game-explanation">
+            <div>
+                <p class="eyebrow">
+                    Why this helps
+                </p>
+
+                <h2>
+                    Build flexible mathematical thinking.
+                </h2>
+            </div>
+
+            <p>
+                The 24 Game encourages students to test multiple strategies,
+                work backward from a target, recognize useful number
+                relationships, and become more comfortable with arithmetic
+                operations.
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div>
+                <strong>
+                    Our Tutoring Program
+                </strong>
+
+                <p>
+                    Accessible STEM support for students from middle school
+                    through college.
+                </p>
+            </div>
+
+            <div class="footer-links">
+                <a href="../contact_us/contact_us.html">
+                    Tutors
+                </a>
+
+                <a href="games.html">
+                    Games
+                </a>
+
+                <a href="../scheduling/schedule.html">
+                    Schedule
+                </a>
+
+                <a href="mailto:mingbei.liu@gmail.com">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+
+        <p class="copyright">
+            © Our Tutoring Program.
+        </p>
+    </footer>
+
+</body>
+
+</html>
