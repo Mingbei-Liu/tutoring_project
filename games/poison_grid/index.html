@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Play Poison Grid, a configurable two-player spatial strategy game."
+    >
+
+    <title>Poison Grid | Our Tutoring Program</title>
+
+    <link
+        rel="stylesheet"
+        href="../../styles.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="poison_grid.css"
+    >
+
+    <script
+        src="poison_grid.js?v=1"
+        defer
+    ></script>
+</head>
+
+<body class="poison-grid-page">
+
+    <header class="site-header">
+        <div class="nav-container">
+
+            <a
+                class="brand"
+                href="../../index.html"
+                aria-label="Our Tutoring Program home"
+            >
+                <span class="brand-mark" aria-hidden="true">OT</span>
+
+                <span class="brand-text">
+                    <strong>Our Tutoring</strong>
+                    <span>Accessible, confidence-building STEM support</span>
+                </span>
+            </a>
+
+            <button
+                id="menuButton"
+                class="menu-button"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mainNavigation"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav
+                id="mainNavigation"
+                class="main-navigation"
+                aria-label="Main navigation"
+            >
+                <a href="../../index.html#home">Home</a>
+                <a href="../../index.html#subjects">Subjects</a>
+                <a href="../../index.html#tutors">Tutors</a>
+                <a href="../games.html" aria-current="page">Games</a>
+                <a href="../../scheduling/schedule.html">Schedule</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="poison-grid-main">
+
+        <a
+            class="game-back-link"
+            href="../games.html"
+        >
+            ← Return to Games
+        </a>
+
+        <section
+            class="poison-grid-introduction"
+            aria-labelledby="poisonGridTitle"
+        >
+            <p class="eyebrow">
+                Spatial strategy
+            </p>
+
+            <h1 id="poisonGridTitle">
+                Poison Grid
+            </h1>
+
+            <p>
+                Players alternate choosing one remaining tile. The chosen tile
+                and every remaining tile above it and to its right are removed.
+                The bottom-left tile is poisoned: whoever takes it loses.
+            </p>
+        </section>
+
+        <section
+            id="setupPanel"
+            class="setup-panel"
+            aria-labelledby="setupHeading"
+        >
+            <div class="setup-heading">
+                <div>
+                    <p class="panel-label">
+                        Game setup
+                    </p>
+
+                    <h2 id="setupHeading">
+                        Build your board
+                    </h2>
+                </div>
+
+                <p>
+                    Choose the dimensions, name the players, and decide who
+                    begins.
+                </p>
+            </div>
+
+            <div class="setup-grid">
+                <div class="setup-field">
+                    <label for="rowInput">
+                        Rows (m)
+                    </label>
+
+                    <input
+                        id="rowInput"
+                        type="number"
+                        min="2"
+                        max="10"
+                        value="5"
+                        inputmode="numeric"
+                    >
+                </div>
+
+                <div class="setup-field">
+                    <label for="columnInput">
+                        Columns (n)
+                    </label>
+
+                    <input
+                        id="columnInput"
+                        type="number"
+                        min="2"
+                        max="12"
+                        value="7"
+                        inputmode="numeric"
+                    >
+                </div>
+
+                <div class="setup-field">
+                    <label for="playerOneInput">
+                        Player 1
+                    </label>
+
+                    <input
+                        id="playerOneInput"
+                        type="text"
+                        value="Player 1"
+                        maxlength="30"
+                    >
+                </div>
+
+                <div class="setup-field">
+                    <label for="playerTwoInput">
+                        Player 2
+                    </label>
+
+                    <input
+                        id="playerTwoInput"
+                        type="text"
+                        value="Player 2"
+                        maxlength="30"
+                    >
+                </div>
+
+                <div class="setup-field setup-field-wide">
+                    <label for="startingPlayerSelect">
+                        Starting player
+                    </label>
+
+                    <select id="startingPlayerSelect">
+                        <option value="0">Player 1</option>
+                        <option value="1">Player 2</option>
+                    </select>
+                </div>
+            </div>
+
+            <button
+                id="startGameButton"
+                class="primary-game-button"
+                type="button"
+            >
+                Start New Game
+            </button>
+        </section>
+
+        <section
+            id="gamePanel"
+            class="game-panel"
+            aria-labelledby="boardHeading"
+        >
+            <div class="game-status-row">
+                <div>
+                    <p class="panel-label">
+                        Current turn
+                    </p>
+
+                    <h2
+                        id="turnHeading"
+                        class="turn-heading"
+                    >
+                        Player 1
+                    </h2>
+                </div>
+
+                <div class="board-statistics">
+                    <span id="dimensionBadge">5 × 7 grid</span>
+                    <span id="remainingBadge">35 tiles remaining</span>
+                </div>
+            </div>
+
+            <div class="rule-summary">
+                <div>
+                    <span class="rule-number">1</span>
+                    Select any remaining tile.
+                </div>
+
+                <div>
+                    <span class="rule-number">2</span>
+                    The highlighted region is removed.
+                </div>
+
+                <div>
+                    <span class="rule-number danger-rule">!</span>
+                    Taking the red poison tile loses.
+                </div>
+            </div>
+
+            <div
+                id="boardMessage"
+                class="board-message"
+                role="status"
+                aria-live="polite"
+            >
+                Hover over a tile to preview the move, then click to remove it.
+            </div>
+
+            <div class="board-scroll">
+                <div
+                    id="gridBoard"
+                    class="grid-board"
+                    role="grid"
+                    aria-label="Poison Grid game board"
+                ></div>
+            </div>
+
+            <div class="poison-legend">
+                <span class="legend-swatch normal-swatch"></span>
+                Available tile
+
+                <span class="legend-swatch preview-swatch"></span>
+                Removed by the selected move
+
+                <span class="legend-swatch poison-swatch"></span>
+                Poison tile
+            </div>
+
+            <div class="game-controls">
+                <button
+                    id="undoMoveButton"
+                    class="secondary-game-button"
+                    type="button"
+                    disabled
+                >
+                    Undo Move
+                </button>
+
+                <button
+                    id="resetGameButton"
+                    class="secondary-game-button"
+                    type="button"
+                >
+                    Reset Board
+                </button>
+
+                <button
+                    id="changeSetupButton"
+                    class="secondary-game-button"
+                    type="button"
+                >
+                    Change Setup
+                </button>
+            </div>
+
+            <section
+                class="history-panel"
+                aria-labelledby="historyHeading"
+            >
+                <div class="history-heading">
+                    <div>
+                        <p class="panel-label">
+                            Match record
+                        </p>
+
+                        <h3 id="historyHeading">
+                            Move history
+                        </h3>
+                    </div>
+
+                    <span id="moveCountBadge">
+                        0 moves
+                    </span>
+                </div>
+
+                <ol
+                    id="moveHistory"
+                    class="move-history"
+                >
+                    <li class="empty-history">
+                        Moves will appear here.
+                    </li>
+                </ol>
+            </section>
+        </section>
+
+        <section
+            id="resultPanel"
+            class="result-panel"
+            hidden
+            aria-labelledby="resultHeading"
+        >
+            <p class="panel-label">
+                Game over
+            </p>
+
+            <h2 id="resultHeading">
+                Player 2 wins!
+            </h2>
+
+            <p id="resultExplanation">
+                Player 1 took the poisoned bottom-left tile and loses.
+            </p>
+
+            <div class="result-actions">
+                <button
+                    id="playAgainButton"
+                    class="primary-game-button"
+                    type="button"
+                >
+                    Play Again
+                </button>
+
+                <button
+                    id="resultSetupButton"
+                    class="secondary-game-button"
+                    type="button"
+                >
+                    Change Setup
+                </button>
+            </div>
+        </section>
+
+        <section class="strategy-explanation">
+            <div>
+                <p class="eyebrow">
+                    Think in shapes
+                </p>
+
+                <h2>
+                    Every move changes the boundary of the board.
+                </h2>
+            </div>
+
+            <p>
+                The remaining tiles always form a staircase-like region anchored
+                at the poisoned bottom-left corner. Strong play requires
+                anticipating how your move changes the safe choices available
+                to the other player.
+            </p>
+        </section>
+
+        <p
+            id="gameAnnouncement"
+            class="visually-hidden"
+            aria-live="polite"
+        ></p>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div>
+                <strong>Our Tutoring Program</strong>
+
+                <p>
+                    Accessible STEM support for students from middle school
+                    through college.
+                </p>
+            </div>
+
+            <div class="footer-links">
+                <a href="../../contact_us/contact_us.html">Tutors</a>
+                <a href="../games.html">Games</a>
+                <a href="../../scheduling/schedule.html">Schedule</a>
+                <a href="mailto:mingbei.liu@gmail.com">Contact Us</a>
+            </div>
+        </div>
+
+        <p class="copyright">
+            © Our Tutoring Program.
+        </p>
+    </footer>
+
+</body>
+
+</html>

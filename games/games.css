@@ -59,7 +59,7 @@ body.games-library-page {
 
 .game-card-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 26px;
 }
 
@@ -315,5 +315,66 @@ body.games-library-page {
 
     .library-game-button {
         width: 100%;
+    }
+}
+
+
+/* Poison Grid library card */
+
+.library-game-card--poison-grid::before {
+    background: rgba(90, 162, 119, 0.13);
+}
+
+.poison-grid-icon {
+    display: grid;
+    grid-template-columns: repeat(2, 18px);
+    grid-template-rows: repeat(2, 18px);
+    gap: 5px;
+    place-content: center;
+    background: linear-gradient(145deg, #3d8d67, #76bd91);
+}
+
+.poison-grid-icon span {
+    display: block;
+    width: 18px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+}
+
+.poison-grid-icon .poison-mini-tile {
+    background: #e97a78;
+    box-shadow: 0 0 0 2px rgba(123, 34, 34, 0.18);
+}
+
+.library-game-card--poison-grid .library-game-tag {
+    color: #246342;
+    background: #edf8f1;
+    border-color: #b9dec7;
+}
+
+.library-game-card--poison-grid .game-feature-list li::before {
+    color: #3d8d67;
+}
+
+.library-game-card--poison-grid .library-game-button {
+    background: #347b59;
+    box-shadow: 0 11px 24px rgba(52, 123, 89, 0.2);
+}
+
+.library-game-card--poison-grid .library-game-button:hover,
+.library-game-card--poison-grid .library-game-button:focus-visible {
+    background: #265f43;
+}
+
+@media (max-width: 1040px) {
+    .game-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 800px) {
+    .game-card-grid {
+        grid-template-columns: 1fr;
     }
 }
