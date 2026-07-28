@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <meta
+        name="description"
+        content="Play Matches, a two-pile misère strategy game, against another player or a computer opponent."
+    >
+
+    <title>Matches | Our Tutoring Program</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="matches.css">
+    <script src="matches.js?v=1" defer></script>
+</head>
+
+<body class="matches-page">
+
+    <header class="site-header">
+        <div class="nav-container">
+            <a
+                class="brand"
+                href="../../index.html"
+                aria-label="Our Tutoring Program home"
+            >
+                <span class="brand-mark" aria-hidden="true">OT</span>
+                <span class="brand-text">
+                    <strong>Our Tutoring</strong>
+                    <span>Accessible, confidence-building STEM support</span>
+                </span>
+            </a>
+
+            <button
+                id="menuButton"
+                class="menu-button"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mainNavigation"
+            >
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav
+                id="mainNavigation"
+                class="main-navigation"
+                aria-label="Main navigation"
+            >
+                <a href="../../index.html#home">Home</a>
+                <a href="../../index.html#subjects">Subjects</a>
+                <a href="../../index.html#tutors">Tutors</a>
+                <a href="../games.html" aria-current="page">Games</a>
+                <a href="../../scheduling/schedule.html">Schedule</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="matches-main">
+        <a class="matches-back-link" href="../games.html">← All Games</a>
+
+        <section class="matches-introduction" aria-labelledby="matchesTitle">
+            <p class="eyebrow">Two-pile strategy game</p>
+            <h1 id="matchesTitle">Matches</h1>
+            <p>
+                On each turn, remove any positive number of matches from one
+                pile. The player who takes the absolute last match loses.
+            </p>
+        </section>
+
+        <section class="matches-setup-card" aria-labelledby="setupHeading">
+            <div class="setup-heading-row">
+                <div>
+                    <p class="matches-label">Game setup</p>
+                    <h2 id="setupHeading">Choose how to play</h2>
+                </div>
+                <span id="setupSummary" class="setup-summary">Versus computer · You go first</span>
+            </div>
+
+            <div class="setup-grid">
+                <fieldset class="setup-fieldset">
+                    <legend>Players</legend>
+                    <label class="choice-card">
+                        <input type="radio" name="mode" value="computer" checked>
+                        <span>
+                            <strong>Player vs. Computer</strong>
+                            <small>Play against an automated opponent.</small>
+                        </span>
+                    </label>
+                    <label class="choice-card">
+                        <input type="radio" name="mode" value="human">
+                        <span>
+                            <strong>Two Real Players</strong>
+                            <small>Take turns on the same device.</small>
+                        </span>
+                    </label>
+                </fieldset>
+
+                <fieldset id="computerStyleFieldset" class="setup-fieldset">
+                    <legend>Computer style</legend>
+                    <label class="choice-card">
+                        <input type="radio" name="computerStyle" value="optimal" checked>
+                        <span>
+                            <strong>Optimal</strong>
+                            <small>Always chooses a mathematically optimal move.</small>
+                        </span>
+                    </label>
+                    <label class="choice-card">
+                        <input type="radio" name="computerStyle" value="casual">
+                        <span>
+                            <strong>Casual</strong>
+                            <small>90% gentle random moves, 10% optimal moves.</small>
+                        </span>
+                    </label>
+                </fieldset>
+
+                <fieldset class="setup-fieldset">
+                    <legend id="turnOrderLegend">Turn order</legend>
+                    <label class="choice-card">
+                        <input type="radio" name="turnOrder" value="first" checked>
+                        <span>
+                            <strong id="firstTurnLabel">I go first</strong>
+                            <small id="firstTurnDescription">You take the opening turn.</small>
+                        </span>
+                    </label>
+                    <label class="choice-card">
+                        <input type="radio" name="turnOrder" value="second">
+                        <span>
+                            <strong id="secondTurnLabel">Computer goes first</strong>
+                            <small id="secondTurnDescription">The computer takes the opening turn.</small>
+                        </span>
+                    </label>
+                </fieldset>
+
+                <label class="length-select-field">
+                    <span>Game length</span>
+                    <select id="gameLength">
+                        <option value="short">Short · 5–9 per pile</option>
+                        <option value="standard" selected>Standard · 9–15 per pile</option>
+                        <option value="long">Long · 15–22 per pile</option>
+                    </select>
+                </label>
+            </div>
+
+            <button id="startGameButton" class="matches-primary-button" type="button">
+                Start New Game
+            </button>
+        </section>
+
+        <section id="matchesBoard" class="matches-board" aria-labelledby="boardHeading">
+            <div class="board-status-row">
+                <div>
+                    <p class="matches-label">Current turn</p>
+                    <h2 id="boardHeading">Your turn</h2>
+                </div>
+                <div class="board-badges">
+                    <span id="modeBadge" class="board-badge">Vs. Computer</span>
+                    <span class="danger-badge">Taking the last match loses</span>
+                </div>
+            </div>
+
+            <div id="turnMessage" class="turn-message" role="status" aria-live="polite">
+                Select a match in one pile. That match and every match to its right will be removed.
+            </div>
+
+            <div class="piles-grid">
+                <article class="pile-card" aria-labelledby="pileAHeading">
+                    <div class="pile-header">
+                        <div>
+                            <p class="matches-label">Pile A</p>
+                            <h3 id="pileAHeading"><span id="pileACount">0</span> matches</h3>
+                        </div>
+                        <button class="clear-pile-selection" type="button" data-pile="0" hidden>
+                            Clear
+                        </button>
+                    </div>
+                    <div id="pileA" class="match-pile" aria-label="Pile A matches"></div>
+                </article>
+
+                <article class="pile-card" aria-labelledby="pileBHeading">
+                    <div class="pile-header">
+                        <div>
+                            <p class="matches-label">Pile B</p>
+                            <h3 id="pileBHeading"><span id="pileBCount">0</span> matches</h3>
+                        </div>
+                        <button class="clear-pile-selection" type="button" data-pile="1" hidden>
+                            Clear
+                        </button>
+                    </div>
+                    <div id="pileB" class="match-pile" aria-label="Pile B matches"></div>
+                </article>
+            </div>
+
+            <div class="take-panel">
+                <div>
+                    <p class="matches-label">Selected move</p>
+                    <p id="selectionText" class="selection-text">Select matches from one pile.</p>
+                </div>
+                <button id="takeMatchesButton" class="matches-primary-button" type="button" disabled>
+                    Take Matches
+                </button>
+            </div>
+
+            <div id="computerThinking" class="computer-thinking" hidden>
+                <span class="thinking-dot"></span>
+                <span class="thinking-dot"></span>
+                <span class="thinking-dot"></span>
+                Computer is choosing a move…
+            </div>
+
+            <section class="match-history-section" aria-labelledby="historyHeading">
+                <div class="history-heading-row">
+                    <div>
+                        <p class="matches-label">Game record</p>
+                        <h3 id="historyHeading">Move history</h3>
+                    </div>
+                    <span id="totalMatchesBadge" class="board-badge">0 matches remain</span>
+                </div>
+                <ol id="matchHistory" class="match-history">
+                    <li class="empty-history">The first move will appear here.</li>
+                </ol>
+            </section>
+
+            <div class="board-controls">
+                <button id="resetMatchesButton" class="matches-secondary-button" type="button">
+                    Reset Same Piles
+                </button>
+                <button id="newMatchesButton" class="matches-primary-button" type="button">
+                    New Random Piles
+                </button>
+            </div>
+        </section>
+
+        <section id="gameOverPanel" class="game-over-panel" hidden aria-live="assertive">
+            <p class="matches-label">Game over</p>
+            <h2 id="gameOverHeading">Winner</h2>
+            <p id="gameOverText"></p>
+            <div class="game-over-actions">
+                <button id="playAgainButton" class="matches-primary-button" type="button">
+                    Play Again
+                </button>
+                <a class="matches-secondary-link" href="../games.html">Choose Another Game</a>
+            </div>
+        </section>
+
+        <section class="matches-strategy-note">
+            <div>
+                <p class="eyebrow">Strategy and computer behavior</p>
+                <h2>Every computer move follows the same rules as yours.</h2>
+            </div>
+            <p>
+                The optimal opponent evaluates the complete two-pile game and
+                chooses a move that forces a win whenever one exists. The
+                casual opponent chooses a gentle random move 90% of the time,
+                favoring smaller removals so the game lasts longer, and uses
+                the optimal strategy 10% of the time.
+            </p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div>
+                <strong>Our Tutoring Program</strong>
+                <p>Accessible STEM support for students from middle school through college.</p>
+            </div>
+            <div class="footer-links">
+                <a href="../../contact_us/contact_us.html">Tutors</a>
+                <a href="../games.html">Games</a>
+                <a href="../../scheduling/schedule.html">Schedule</a>
+                <a href="mailto:mingbei.liu@gmail.com">Contact Us</a>
+            </div>
+        </div>
+        <p class="copyright">© Our Tutoring Program.</p>
+    </footer>
+
+</body>
+</html>

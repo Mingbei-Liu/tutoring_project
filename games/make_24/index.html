@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Play an interactive version of the 24 Game using exact arithmetic, step-by-step tile combinations, and a complete solution list."
+    >
+
+    <title>Make 24 | Our Tutoring Program</title>
+
+    <link
+        rel="stylesheet"
+        href="../../styles.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="make_24.css"
+    >
+
+    <script
+        src="make_24.js?v=4"
+        defer
+    ></script>
+</head>
+
+<body class="games-page">
+
+    <header class="site-header">
+        <div class="nav-container">
+
+            <a
+                class="brand"
+                href="../../index.html"
+                aria-label="Our Tutoring Program home"
+            >
+                <span
+                    class="brand-mark"
+                    aria-hidden="true"
+                >
+                    OT
+                </span>
+
+                <span class="brand-text">
+                    <strong>Our Tutoring</strong>
+                    <span>Accessible, confidence-building STEM support</span>
+                </span>
+            </a>
+
+            <button
+                id="menuButton"
+                class="menu-button"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mainNavigation"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav
+                id="mainNavigation"
+                class="main-navigation"
+                aria-label="Main navigation"
+            >
+                <a href="../../index.html#home">Home</a>
+                <a href="../../index.html#subjects">Subjects</a>
+                <a href="../../index.html#tutors">Tutors</a>
+
+                <a
+                    href="../games.html"
+                    aria-current="page"
+                >
+                    Games
+                </a>
+
+                <a href="../../scheduling/schedule.html">Schedule</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="game-page-main">
+
+        <a
+            class="game-back-link"
+            href="../../index.html"
+        >
+            ← Return to Home
+        </a>
+
+        <section
+            class="game-introduction"
+            aria-labelledby="gameTitle"
+        >
+            <p class="eyebrow">
+                Arithmetic challenge
+            </p>
+
+            <h1 id="gameTitle">
+                The 24 Game
+            </h1>
+
+            <p>
+                Use each number exactly once. Select a tile, choose an
+                operation, and then select another tile. The two tiles will
+                condense into their exact result.
+            </p>
+        </section>
+
+        <section
+            class="challenge-card"
+            aria-labelledby="challengeHeading"
+        >
+            <div class="challenge-card-header">
+                <div>
+                    <p class="challenge-label">
+                        Current puzzle
+                    </p>
+
+                    <h2 id="challengeHeading">
+                        Can you make 24?
+                    </h2>
+                </div>
+
+                <div class="puzzle-metadata">
+                    <span class="puzzle-status">
+                        Guaranteed solvable
+                    </span>
+
+                    <span
+                        id="solutionCountBadge"
+                        class="solution-count-badge"
+                    >
+                        Finding solutions…
+                    </span>
+                </div>
+            </div>
+
+            <div class="play-instructions">
+                <div>
+                    <span>1</span>
+                    Select the left tile
+                </div>
+
+                <div>
+                    <span>2</span>
+                    Choose an operator
+                </div>
+
+                <div>
+                    <span>3</span>
+                    Select the right tile
+                </div>
+            </div>
+
+            <div
+                id="selectionPreview"
+                class="selection-preview"
+                aria-live="polite"
+            >
+                Select the first tile.
+            </div>
+
+            <div
+                id="tileWorkspace"
+                class="tile-workspace"
+                aria-label="Interactive number tiles"
+            ></div>
+
+            <div
+                id="operatorTray"
+                class="operator-tray"
+                aria-label="Arithmetic operators"
+            >
+                <button
+                    class="operator-button"
+                    type="button"
+                    data-operator="+"
+                    aria-label="Add"
+                    disabled
+                >
+                    +
+                </button>
+
+                <button
+                    class="operator-button"
+                    type="button"
+                    data-operator="-"
+                    aria-label="Subtract"
+                    disabled
+                >
+                    −
+                </button>
+
+                <button
+                    class="operator-button"
+                    type="button"
+                    data-operator="*"
+                    aria-label="Multiply"
+                    disabled
+                >
+                    ×
+                </button>
+
+                <button
+                    class="operator-button"
+                    type="button"
+                    data-operator="/"
+                    aria-label="Divide"
+                    disabled
+                >
+                    ÷
+                </button>
+            </div>
+
+            <div
+                id="gameFeedback"
+                class="game-feedback"
+                role="status"
+                aria-live="polite"
+            >
+                Combine the four tiles until only one value remains.
+            </div>
+
+            <div class="game-controls">
+                <button
+                    id="undoButton"
+                    class="game-control-button"
+                    type="button"
+                    disabled
+                >
+                    Undo
+                </button>
+
+                <button
+                    id="resetButton"
+                    class="game-control-button"
+                    type="button"
+                >
+                    Reset Puzzle
+                </button>
+
+                <button
+                    id="newPuzzleButton"
+                    class="game-primary-button"
+                    type="button"
+                >
+                    New Puzzle
+                </button>
+            </div>
+
+            <section
+                class="move-history-section"
+                aria-labelledby="moveHistoryHeading"
+            >
+                <div class="move-history-header">
+                    <div>
+                        <p class="challenge-label">
+                            Your work
+                        </p>
+
+                        <h3 id="moveHistoryHeading">
+                            Step history
+                        </h3>
+                    </div>
+
+                    <span
+                        id="remainingTileCount"
+                        class="remaining-tile-count"
+                    >
+                        4 tiles remaining
+                    </span>
+                </div>
+
+                <ol
+                    id="moveHistory"
+                    class="move-history"
+                >
+                    <li class="empty-history">
+                        Your operations will appear here.
+                    </li>
+                </ol>
+            </section>
+
+            <div class="solution-actions">
+                <button
+                    id="solutionsButton"
+                    class="game-secondary-button"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="solutionsPanel"
+                >
+                    View All Solutions
+                </button>
+            </div>
+
+            <section
+                id="solutionsPanel"
+                class="solutions-panel"
+                hidden
+                aria-labelledby="solutionsHeading"
+            >
+                <div class="solutions-header">
+                    <div>
+                        <p class="solution-label">
+                            Complete answer key
+                        </p>
+
+                        <h3 id="solutionsHeading">
+                            All unique solutions
+                        </h3>
+                    </div>
+
+                    <span id="solutionsPanelCount"></span>
+                </div>
+
+                <p class="solutions-explanation">
+                    Equivalent mirror arrangements for commutative operations
+                    are removed, matching the uniqueness rules used by the
+                    original Python solver.
+                </p>
+
+                <ol
+                    id="solutionsList"
+                    class="solutions-list"
+                ></ol>
+            </section>
+
+            <p
+                id="gameAnnouncement"
+                class="visually-hidden"
+                aria-live="polite"
+            ></p>
+        </section>
+
+        <section class="game-explanation">
+            <div>
+                <p class="eyebrow">
+                    How the tiles work
+                </p>
+
+                <h2>
+                    Every move becomes a new exact value.
+                </h2>
+            </div>
+
+            <p>
+                Fractions are preserved rather than rounded. For example,
+                combining 8 and 3 with division creates an exact 8/3 tile,
+                which can then be used in the next operation. Undo restores
+                the previous set of tiles and Reset Puzzle returns to the
+                original four numbers.
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div>
+                <strong>
+                    Our Tutoring Program
+                </strong>
+
+                <p>
+                    Accessible STEM support for students from middle school
+                    through college.
+                </p>
+            </div>
+
+            <div class="footer-links">
+                <a href="../../contact_us/contact_us.html">
+                    Tutors
+                </a>
+
+                <a href="../games.html">
+                    Games
+                </a>
+
+                <a href="../../scheduling/schedule.html">
+                    Schedule
+                </a>
+
+                <a href="mailto:mingbei.liu@gmail.com">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+
+        <p class="copyright">
+            © Our Tutoring Program.
+        </p>
+    </footer>
+
+</body>
+
+</html>

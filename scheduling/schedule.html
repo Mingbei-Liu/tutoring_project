@@ -47,7 +47,7 @@
                             <img src="../profile_pics/gaven_profile_pic.jpeg" alt="">
                             <span class="tutor-option-copy">
                                 <strong>Gaven</strong>
-                                <span>Mathematics · Physics · Chemistry · Engineering</span>
+                                <span>Mathematics · Physics · Engineering</span>
                             </span>
                             <span class="selection-indicator" aria-hidden="true">✓</span>
                         </span>
@@ -59,7 +59,7 @@
                             <img src="../profile_pics/tommy_profile_pic.jpeg" alt="">
                             <span class="tutor-option-copy">
                                 <strong>Tommy</strong>
-                                <span>Programming · Computer Science · Discrete Mathematics</span>
+                                <span>Mathematics · Computer Science · Chemistry</span>
                             </span>
                             <span class="selection-indicator" aria-hidden="true">✓</span>
                         </span>
@@ -71,7 +71,7 @@
                             <img src="../profile_pics/tori_profile_pic.jpeg" alt="">
                             <span class="tutor-option-copy">
                                 <strong>Tori</strong>
-                                <span>Biology · Statistics · General Science</span>
+                                <span>Mathematics</span>
                             </span>
                             <span class="selection-indicator" aria-hidden="true">✓</span>
                         </span>
@@ -101,26 +101,14 @@
                         >
                     </div>
 
-                    <div class="field">
-                        <label for="studentEmail">Email</label>
-                        <input
-                            id="studentEmail"
-                            name="email"
-                            type="email"
-                            autocomplete="email"
-                            maxlength="150"
-                            aria-describedby="contactRequirement"
-                        >
-                    </div>
-
-                    <div class="field">
-                        <label for="studentPhone">Phone number</label>
+                    <div class="field field-wide-mobile">
+                        <label for="studentName">Phone number/email <span aria-hidden="true">*</span></label>
                         <input
                             id="studentPhone"
                             name="phone"
                             type="tel"
                             autocomplete="tel"
-                            maxlength="40"
+                            maxlength="60"
                             aria-describedby="contactRequirement"
                         >
                     </div>
@@ -170,9 +158,9 @@
                 <div class="section-heading availability-heading-row">
                     <div>
                         <p class="step-label">Step 3</p>
-                        <h2 id="availabilityHeading">Weekly availability</h2>
+                        <h2 id="availabilityHeading">Availability</h2>
                         <p class="section-description">
-                            Select 30-minute intervals between 9:00 AM and 10:00 PM. Drag to select several intervals quickly.
+                            Drag to quickly select multiple time intervals. Because some time slots may already be filled, please select as many times as possible that work for you.
                         </p>
                     </div>
 
@@ -183,7 +171,7 @@
 
                 <div class="selection-key" aria-hidden="true">
                     <span class="key-swatch"></span>
-                    Selected availability
+                    Selected
                 </div>
 
                 <div class="timetable-scroll" tabindex="0" aria-label="Scrollable weekly availability timetable">
@@ -216,7 +204,7 @@
                 </button>
 
                 <p class="privacy-note">
-                    Your information will be used only to coordinate tutoring and will be sent to our scheduling team.
+                    We will reach out to you to coordinate your tutoring slot based on your identified availability.
                 </p>
             </section>
         </form>
