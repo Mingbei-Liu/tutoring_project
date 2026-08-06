@@ -224,14 +224,6 @@
                 </button>
             </div>
 
-            <div
-                id="gameFeedback"
-                class="game-feedback"
-                role="status"
-                aria-live="polite"
-            >
-                Combine the four tiles until only one value remains.
-            </div>
 
             <div class="game-controls">
                 <button
@@ -260,38 +252,6 @@
                 </button>
             </div>
 
-            <section
-                class="move-history-section"
-                aria-labelledby="moveHistoryHeading"
-            >
-                <div class="move-history-header">
-                    <div>
-                        <p class="challenge-label">
-                            Your work
-                        </p>
-
-                        <h3 id="moveHistoryHeading">
-                            Step history
-                        </h3>
-                    </div>
-
-                    <span
-                        id="remainingTileCount"
-                        class="remaining-tile-count"
-                    >
-                        4 tiles remaining
-                    </span>
-                </div>
-
-                <ol
-                    id="moveHistory"
-                    class="move-history"
-                >
-                    <li class="empty-history">
-                        Your operations will appear here.
-                    </li>
-                </ol>
-            </section>
 
             <div class="solution-actions">
                 <button
@@ -342,26 +302,6 @@
                 class="visually-hidden"
                 aria-live="polite"
             ></p>
-        </section>
-
-        <section class="game-explanation">
-            <div>
-                <p class="eyebrow">
-                    How the tiles work
-                </p>
-
-                <h2>
-                    Every move becomes a new exact value.
-                </h2>
-            </div>
-
-            <p>
-                Fractions are preserved rather than rounded. For example,
-                combining 8 and 3 with division creates an exact 8/3 tile,
-                which can then be used in the next operation. Undo restores
-                the previous set of tiles and Reset Puzzle returns to the
-                original four numbers.
-            </p>
         </section>
 
     </main>
