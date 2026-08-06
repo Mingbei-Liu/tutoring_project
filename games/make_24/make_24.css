@@ -124,16 +124,6 @@ body.games-page {
 
 .puzzle-status,
 .solution-count-badge,
-.remaining-tile-count {
-    display: inline-flex;
-    align-items: center;
-    min-height: 34px;
-    padding: 7px 12px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 900;
-}
-
 .puzzle-status {
     color: #245b36;
     background: #edf9f0;
@@ -434,15 +424,6 @@ body.games-page {
     opacity: 0.5;
 }
 
-.move-history-section {
-    margin-top: 31px;
-    padding: 24px;
-    background: #fbfcff;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-}
-
-.move-history-header,
 .solutions-header {
     display: flex;
     align-items: flex-start;
@@ -450,7 +431,6 @@ body.games-page {
     gap: 20px;
 }
 
-.move-history-header h3,
 .solutions-header h3 {
     margin: 0;
     font-size: 23px;
@@ -461,32 +441,6 @@ body.games-page {
     color: #4e5870;
     background: #ffffff;
     border: 1px solid var(--border);
-}
-
-.move-history {
-    display: grid;
-    gap: 10px;
-    margin: 18px 0 0;
-    padding-left: 25px;
-}
-
-.move-history li {
-    padding: 11px 13px;
-    color: #3d4760;
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-family:
-        "Courier New",
-        Courier,
-        monospace;
-    font-weight: 800;
-}
-
-.move-history .empty-history {
-    color: var(--muted);
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 600;
 }
 
 .solutions-panel {
@@ -611,7 +565,6 @@ body.games-page {
     }
 
     .challenge-card-header,
-    .move-history-header,
     .solutions-header {
         flex-direction: column;
         gap: 14px;
@@ -686,7 +639,6 @@ body.games-page {
         width: 100%;
     }
 
-    .move-history-section,
     .solutions-panel {
         padding: 20px 15px;
     }

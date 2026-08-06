@@ -1,0 +1,24 @@
+MAKE 24 — STEP HISTORY REMOVED
+
+Replace these files inside games/make_24/:
+
+- index.html
+- make_24.js
+- make_24.css
+
+Removed:
+- The Step history / Your work panel
+- The remaining-tile badge inside that panel
+- All JavaScript used only to record and render move history
+
+Still working:
+- Select and combine tiles
+- Exact fraction results
+- Undo
+- Reset Puzzle
+- New Puzzle
+- Game feedback
+- View All Solutions
+
+After replacing the files, close the page and hard-refresh:
+Command + Shift + R

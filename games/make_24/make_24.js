@@ -142,12 +142,6 @@ const resetButton =
 const newPuzzleButton =
     document.getElementById("newPuzzleButton");
 
-const remainingTileCount =
-    document.getElementById("remainingTileCount");
-
-const moveHistory =
-    document.getElementById("moveHistory");
-
 const solutionsButton =
     document.getElementById("solutionsButton");
 
@@ -175,14 +169,47 @@ const mainNavigation =
 let originalNumbers = [];
 let puzzleSolutions = [];
 let terms = [];
-let operationHistory = [];
 let undoStack = [];
 let selectedTermId = null;
 let selectedOperator = null;
 let nextTermId = 1;
 let newestTermId = null;
 
+validateRequiredElements();
 initializeGame();
+
+
+function validateRequiredElements() {
+    const requiredElements = {
+        tileWorkspace,
+        selectionPreview,
+        gameFeedback,
+        undoButton,
+        resetButton,
+        newPuzzleButton,
+        solutionsButton,
+        solutionsPanel,
+        solutionsList,
+        solutionCountBadge,
+        solutionsPanelCount,
+        gameAnnouncement
+    };
+
+    const missingIds = Object.entries(requiredElements)
+        .filter(function ([, element]) {
+            return !element;
+        })
+        .map(function ([name]) {
+            return name;
+        });
+
+    if (missingIds.length > 0) {
+        throw new Error(
+            "Make 24 page is missing required elements: " +
+            missingIds.join(", ")
+        );
+    }
+}
 
 
 function initializeGame() {
@@ -240,73 +267,83 @@ function generateNewPuzzle() {
     newPuzzleButton.textContent =
         "Generating…";
 
-    let selectedPuzzle = null;
+    try {
+        let selectedPuzzle = null;
 
-    for (
-        let attempt = 0;
-        attempt < MAX_GENERATION_ATTEMPTS;
-        attempt += 1
-    ) {
-        const numbers = [
-            randomInteger(MIN_NUMBER, MAX_NUMBER),
-            randomInteger(MIN_NUMBER, MAX_NUMBER),
-            randomInteger(MIN_NUMBER, MAX_NUMBER),
-            randomInteger(MIN_NUMBER, MAX_NUMBER)
-        ];
-
-        const solutions =
-            findAllSolutions(numbers);
-
-        const isSamePuzzle =
-            arraysMatch(
-                numbers.slice().sort(compareNumbers),
-                originalNumbers.slice().sort(compareNumbers)
-            );
-
-        if (
-            !isSamePuzzle &&
-            solutions.length >= MIN_SOLUTIONS &&
-            solutions.length <= MAX_SOLUTIONS
+        for (
+            let attempt = 0;
+            attempt < MAX_GENERATION_ATTEMPTS;
+            attempt += 1
         ) {
-            selectedPuzzle = {
-                numbers: numbers,
-                solutions: solutions
-            };
+            const numbers = [
+                randomInteger(MIN_NUMBER, MAX_NUMBER),
+                randomInteger(MIN_NUMBER, MAX_NUMBER),
+                randomInteger(MIN_NUMBER, MAX_NUMBER),
+                randomInteger(MIN_NUMBER, MAX_NUMBER)
+            ];
 
-            break;
+            const solutions =
+                findAllSolutions(numbers);
+
+            const isSamePuzzle =
+                arraysMatch(
+                    numbers.slice().sort(compareNumbers),
+                    originalNumbers.slice().sort(compareNumbers)
+                );
+
+            if (
+                !isSamePuzzle &&
+                solutions.length >= MIN_SOLUTIONS &&
+                solutions.length <= MAX_SOLUTIONS
+            ) {
+                selectedPuzzle = {
+                    numbers: numbers,
+                    solutions: solutions
+                };
+
+                break;
+            }
         }
+
+        if (!selectedPuzzle) {
+            const fallbackNumbers =
+                [1, 3, 4, 6];
+
+            selectedPuzzle = {
+                numbers:
+                    fallbackNumbers,
+                solutions:
+                    findAllSolutions(
+                        fallbackNumbers
+                    )
+            };
+        }
+
+        originalNumbers =
+            selectedPuzzle.numbers.slice();
+
+        puzzleSolutions =
+            selectedPuzzle.solutions.slice();
+
+        startPuzzle();
+
+        gameAnnouncement.textContent =
+            "New solvable puzzle: " +
+            originalNumbers.join(", ") +
+            ".";
+    } catch (error) {
+        console.error(
+            "Could not generate a Make 24 puzzle:",
+            error
+        );
+
+        selectionPreview.textContent =
+            "The puzzle could not be generated. Refresh the page and try again.";
+    } finally {
+        newPuzzleButton.disabled = false;
+        newPuzzleButton.textContent =
+            "New Puzzle";
     }
-
-    if (!selectedPuzzle) {
-        const fallbackNumbers =
-            [1, 3, 4, 6];
-
-        selectedPuzzle = {
-            numbers:
-                fallbackNumbers,
-            solutions:
-                findAllSolutions(
-                    fallbackNumbers
-                )
-        };
-    }
-
-    originalNumbers =
-        selectedPuzzle.numbers.slice();
-
-    puzzleSolutions =
-        selectedPuzzle.solutions.slice();
-
-    startPuzzle();
-
-    newPuzzleButton.disabled = false;
-    newPuzzleButton.textContent =
-        "New Puzzle";
-
-    gameAnnouncement.textContent =
-        "New solvable puzzle: " +
-        originalNumbers.join(", ") +
-        ".";
 }
 
 
@@ -329,7 +366,6 @@ function startPuzzle() {
             }
         );
 
-    operationHistory = [];
     undoStack = [];
     selectedTermId = null;
     selectedOperator = null;
@@ -476,19 +512,6 @@ function combineSelectedTerms(
             )
             .concat(resultTerm);
 
-    operationHistory.push({
-        left:
-            leftTerm.value.toDisplayString(),
-        right:
-            rightTerm.value.toDisplayString(),
-        operator:
-            operator,
-        result:
-            resultValue.toDisplayString(),
-        expression:
-            resultExpression
-    });
-
     newestTermId =
         resultTerm.id;
 
@@ -531,14 +554,6 @@ function createStateSnapshot() {
     return {
         terms:
             terms.map(cloneTerm),
-        operationHistory:
-            operationHistory.map(
-                function (move) {
-                    return {
-                        ...move
-                    };
-                }
-            ),
         nextTermId:
             nextTermId
     };
@@ -548,15 +563,6 @@ function createStateSnapshot() {
 function restoreStateSnapshot(snapshot) {
     terms =
         snapshot.terms.map(cloneTerm);
-
-    operationHistory =
-        snapshot.operationHistory.map(
-            function (move) {
-                return {
-                    ...move
-                };
-            }
-        );
 
     nextTermId =
         snapshot.nextTermId;
@@ -615,7 +621,6 @@ function renderAll() {
     renderTiles();
     renderOperators();
     renderSelectionPreview();
-    renderHistory();
     renderSolutions();
     renderGameStatus();
 }
@@ -806,57 +811,6 @@ function renderSelectionPreview() {
         " " +
         formatOperator(selectedOperator) +
         " ___ — select the right tile.";
-}
-
-
-function renderHistory() {
-    remainingTileCount.textContent =
-        terms.length +
-        " " +
-        (
-            terms.length === 1
-                ? "tile remaining"
-                : "tiles remaining"
-        );
-
-    moveHistory.innerHTML = "";
-
-    if (
-        operationHistory.length === 0
-    ) {
-        const empty =
-            document.createElement("li");
-
-        empty.className =
-            "empty-history";
-
-        empty.textContent =
-            "Your operations will appear here.";
-
-        moveHistory.appendChild(empty);
-
-        return;
-    }
-
-    operationHistory.forEach(
-        function (move) {
-            const item =
-                document.createElement("li");
-
-            item.textContent =
-                move.left +
-                " " +
-                formatOperator(
-                    move.operator
-                ) +
-                " " +
-                move.right +
-                " = " +
-                move.result;
-
-            moveHistory.appendChild(item);
-        }
-    );
 }
 
 
